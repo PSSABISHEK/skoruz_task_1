@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Tab, Tabs } from "react-bootstrap";
-import Linechart from "./linechart";
-import Barchart from "./barchart";
+import LC_screen from "./linechart_screen";
+import BC_screen from "./barchart_screen";
 
 class Charts_type extends Component {
   constructor(props, context) {
@@ -25,10 +25,10 @@ class Charts_type extends Component {
           onSelect={this.handleclick.bind(this)}
         >
           <Tab eventKey={1} title="Line Graph">
-            <Linechart />
+            <LC_screen />
           </Tab>
           <Tab eventKey={2} title="Bar Graph">
-            <Barchart />
+            <BC_screen />
           </Tab>
         </Tabs>
       </div>
