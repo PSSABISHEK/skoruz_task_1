@@ -76,19 +76,36 @@ class Barchart extends Component {
       .attr("height", d => height - yScale(d.b))
       .attr("width", xScale.bandwidth());
 
+    g
+      .selectAll(".text")
+      .data(data)
+      .enter()
+      .append("text")
+      .attr("class", "label")
+      .attr("x", function(d) {
+        return xScale(d.a)+20;
+      })
+      .attr("y", function(d) {
+        return yScale(d.b)-10 ;
+      })
+      .attr("dy", ".75em")
+      .text(function(d) {
+        return d.b;
+      });
+
     g.append("text")
       .attr("x", -(height / 2))
       .attr("y", -(margin.left - 25))
       .attr("transform", "rotate(-90)")
       .attr("text-anchor", "middle")
-      //.attr("stroke", "black")
+      .attr("stroke", "black")
       .text(yaxis);
 
     g.append("text")
       .attr("x", width / 2)
       .attr("y", height + 30)
       .attr("text-anchor", "middle")
-      //.attr("stroke", "black")
+      .attr("stroke", "black")
       .text(xaxis);
   }
 

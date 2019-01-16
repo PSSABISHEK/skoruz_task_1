@@ -104,12 +104,14 @@ class Linechart extends Component {
       .attr("y", -(margin.left - 30))
       .attr("transform", "rotate(-90)")
       .attr("text-anchor", "middle")
+      .attr("stroke", "black")
       .text(yaxis);
 
     g.append("text")
       .attr("x", width / 2)
       .attr("y", height + 30)
       .attr("text-anchor", "middle")
+      .attr("stroke", "black")
       .text(xaxis);
 
     g.append("path")
@@ -120,6 +122,21 @@ class Linechart extends Component {
       .attr("stroke-linecap", "round")
       .attr("stroke-width", 1.5)
       .attr("d", line);
+    g.selectAll(".text")
+      .data(data)
+      .enter()
+      .append("text")
+      .attr("class", "label")
+      .attr("x", function(d) {
+        return x(d.a);
+      })
+      .attr("y", function(d) {
+        return y(d.b) - 15;
+      })
+      .attr("dy", ".75em")
+      .text(function(d) {
+        return d.b;
+      });
   }
   render() {
     if (this.props.height > 1) this.drawLineChart(this.props);
