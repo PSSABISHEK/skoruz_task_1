@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import InputForBar from "./InputForBar";
+import InputForBar from "../Input/InputForBar";
 import BarChart from "./BarChart";
 
 class BarChartScreen extends Component {

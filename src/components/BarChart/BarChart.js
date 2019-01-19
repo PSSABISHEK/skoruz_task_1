@@ -75,7 +75,7 @@ class BarChart extends Component {
           .tickFormat("")
       );
 
-    g.selectAll()
+    g.selectAll() //Create Bar
       .data(data)
       .enter()
       .append("rect")
@@ -85,6 +85,7 @@ class BarChart extends Component {
       .attr("height", d => height - yScale(d.b))
       .attr("width", xScale.bandwidth());
 
+    //Co-ordinates Label
     if (svgWidth < 500) {
       g.selectAll(".text")
         .data(data)
@@ -119,7 +120,7 @@ class BarChart extends Component {
         });
     }
 
-    g.append("text")
+    g.append("text") // Y-Axis Label
       .attr("x", -(height / 2))
       .attr("y", -(margin.left - 25))
       .attr("transform", "rotate(-90)")
@@ -127,7 +128,7 @@ class BarChart extends Component {
       .attr("stroke", "black")
       .text(yaxis);
 
-    g.append("text")
+    g.append("text") // X-Axis Label
       .attr("x", width / 2)
       .attr("y", height + 30)
       .attr("text-anchor", "middle")

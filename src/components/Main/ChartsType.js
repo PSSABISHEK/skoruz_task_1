@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Tab, Tabs } from "react-bootstrap";
-import LCscreen from "./LineChartScreen";
-import BCscreen from "./BarChartScreen";
+import LCscreen from "../LineChart/LineChartScreen";
+import BCscreen from "../BarChart/BarChartScreen";
 
 class ChartsType extends Component {
   constructor(props, context) {

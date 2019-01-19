@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import InputForLine from "./InputForLine";
+import InputForLine from "../Input/InputForLine";
 import Linechart from "./LineChart";
 
 class LineChartScreen extends Component {
