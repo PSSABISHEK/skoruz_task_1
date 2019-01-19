@@ -26,12 +26,19 @@ class InputForLine extends Component {
   }
 
   submiteval() {
-    this.props.handler(
-      this.state.xaxis,
-      this.state.yaxis,
-      this.state.height,
-      this.state.width
-    );
+    if (
+      (this.state.height && !this.state.width) ||
+      (this.state.width && !this.state.height)
+    ) {
+      alert("Enter both Height and Width");
+    } else {
+      this.props.handler(
+        this.state.xaxis,
+        this.state.yaxis,
+        this.state.height,
+        this.state.width
+      );
+    }
   }
   render() {
     return (

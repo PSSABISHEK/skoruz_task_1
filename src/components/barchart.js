@@ -32,7 +32,7 @@ class BarChart extends Component {
     const xScale = d3
       .scaleBand()
       .range([0, width])
-      .paddingInner(0.1);
+      .padding(0.1);
     xScale.domain(
       data.map(function(d) {
         return d.a;
@@ -45,11 +45,12 @@ class BarChart extends Component {
     );  */
 
     const yScale = d3.scaleLinear().range([height, 0]);
-    yScale.domain(
-      d3.extent(data, function(d) {
+    yScale.domain([
+      0,
+      d3.max(data, function(d) {
         return d.b;
       })
-    );
+    ]);
 
     g.data(data)
       .enter()

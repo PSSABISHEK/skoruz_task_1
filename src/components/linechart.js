@@ -9,7 +9,8 @@ class LineChart extends Component {
       { a: 2, b: 6 },
       { a: 3, b: 2 },
       { a: 4, b: 12 },
-      { a: 5, b: 8 }
+      { a: 5, b: 8 },
+      { a: 9, b: 13 }
     ];
     let xaxis = this.props.xaxis;
     let yaxis = this.props.yaxis;
@@ -38,16 +39,18 @@ class LineChart extends Component {
       .y(function(d) {
         return y(d.b);
       });
-    x.domain(
-      d3.extent(data, function(d) {
+    x.domain([
+      0,
+      d3.max(data, function(d) {
         return d.a;
       })
-    );
-    y.domain(
-      d3.extent(data, function(d) {
+    ]);
+    y.domain([
+      0,
+      d3.max(data, function(d) {
         return d.b;
       })
-    );
+    ]);
 
     //ADD GRID LINES FOR X AND Y  USE THIS METHOD OR THE METHOD BELOW
     /* function make_x_gridlines() {
