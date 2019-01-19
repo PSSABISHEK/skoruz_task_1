@@ -15,8 +15,8 @@ class InputForBar extends Component {
     this.state = {
       xaxis: "",
       yaxis: "",
-      height: "",
-      width: ""
+      height: 0,
+      width: 0
     };
   }
   handleChange(e) {

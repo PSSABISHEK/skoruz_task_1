@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import InputForBar from './inputforbar'
-import Barchart from "./barchart";
+import InputForBar from "./InputForBar";
+import BarChart from "./BarChart";
 
-class BC_screen extends Component {
+class BarChartScreen extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -12,6 +12,7 @@ class BC_screen extends Component {
       width: 0
     };
   }
+
   form_submit(xaxis, yaxis, height, width) {
     this.setState({
       xaxis: xaxis,
@@ -20,16 +21,14 @@ class BC_screen extends Component {
       width: width
     });
   }
-
   render() {
     return (
       <div>
-        <InputForBar handlerb={this.form_submit.bind(this)}/>
-        {/* <Inputdata handlerb={this.form_submit.bind(this)}/> */}
-        <Barchart {...this.state}/>
+        <InputForBar handlerb={this.form_submit.bind(this)} />
+        <BarChart {...this.state} />
       </div>
     );
   }
 }
 
-export default BC_screen;
+export default BarChartScreen;

@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Tab, Tabs } from "react-bootstrap";
-import LC_screen from "./linechart_screen";
-import BC_screen from "./barchart_screen";
+import LCscreen from "./LineChartScreen";
+import BCscreen from "./BarChartScreen";
 
-class Charts_type extends Component {
+class ChartsType extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -25,10 +25,10 @@ class Charts_type extends Component {
           onSelect={this.handleclick.bind(this)}
         >
           <Tab eventKey={1} title="Line Graph">
-            <LC_screen />
+            <LCscreen />
           </Tab>
           <Tab eventKey={2} title="Bar Graph">
-            <BC_screen />
+            <BCscreen />
           </Tab>
         </Tabs>
       </div>
@@ -36,4 +36,4 @@ class Charts_type extends Component {
   }
 }
 
-export default Charts_type;
+export default ChartsType;

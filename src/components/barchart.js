@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import * as d3 from "d3";
 
-class Barchart extends Component {
-  constructor(props, context) {
-    super(props, context);
-  }
+class BarChart extends Component {
   drawBarChart() {
     const data = [
       { a: 2014, b: 100 },
@@ -19,6 +16,7 @@ class Barchart extends Component {
     let yaxis = this.props.yaxis;
     let svgWidth = this.props.width,
       svgHeight = this.props.height;
+
     let margin = { top: 20, right: 20, bottom: 30, left: 50 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
@@ -26,6 +24,7 @@ class Barchart extends Component {
       .select("#sg2")
       .attr("width", svgWidth)
       .attr("height", svgHeight);
+    d3.select("g").remove();
     let g = svg
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -43,7 +42,7 @@ class Barchart extends Component {
       d3.extent(data, function(d) {
         return d.a;
       })
-    ); */
+    );  */
 
     const yScale = d3.scaleLinear().range([height, 0]);
     yScale.domain(
@@ -51,6 +50,15 @@ class Barchart extends Component {
         return d.b;
       })
     );
+
+    g.data(data)
+      .enter()
+      .append("rect")
+      .style("fill", "steelblue")
+      .attr("x", d => xScale(d.a))
+      .attr("y", d => yScale(d.b))
+      .attr("height", d => height - yScale(d.b))
+      .attr("width", xScale.bandwidth());
     g.append("g")
       .attr("transform", `translate(0, ${height})`)
       .call(d3.axisBottom(xScale));
@@ -76,22 +84,39 @@ class Barchart extends Component {
       .attr("height", d => height - yScale(d.b))
       .attr("width", xScale.bandwidth());
 
-    g
-      .selectAll(".text")
-      .data(data)
-      .enter()
-      .append("text")
-      .attr("class", "label")
-      .attr("x", function(d) {
-        return xScale(d.a)+20;
-      })
-      .attr("y", function(d) {
-        return yScale(d.b)-10 ;
-      })
-      .attr("dy", ".75em")
-      .text(function(d) {
-        return d.b;
-      });
+    if (svgWidth < 500) {
+      g.selectAll(".text")
+        .data(data)
+        .enter()
+        .append("text")
+        .attr("class", "label")
+        .attr("x", function(d) {
+          return xScale(d.a) + 7;
+        })
+        .attr("y", function(d) {
+          return yScale(d.b) - 10;
+        })
+        .attr("dy", ".75em")
+        .text(function(d) {
+          return d.b;
+        });
+    } else if (svgWidth >= 500) {
+      g.selectAll(".text")
+        .data(data)
+        .enter()
+        .append("text")
+        .attr("class", "label")
+        .attr("x", function(d) {
+          return xScale(d.a);
+        })
+        .attr("y", function(d) {
+          return yScale(d.b) - 10;
+        })
+        .attr("dy", ".75em")
+        .text(function(d) {
+          return d.b;
+        });
+    }
 
     g.append("text")
       .attr("x", -(height / 2))
@@ -110,7 +135,7 @@ class Barchart extends Component {
   }
 
   render() {
-    if (this.props.height > 1) this.drawBarChart(this.props);
+    if (this.props.height) this.drawBarChart();
     return (
       <div>
         <svg id="sg2" />
@@ -119,4 +144,4 @@ class Barchart extends Component {
   }
 }
 
-export default Barchart;
+export default BarChart;

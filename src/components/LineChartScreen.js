@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import InputForLine from "./inputforline";
-import Linechart from "./linechart";
+import InputForLine from "./InputForLine";
+import Linechart from "./LineChart";
 
-class LC_screen extends Component {
+class LineChartScreen extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -21,7 +21,6 @@ class LC_screen extends Component {
     });
   }
 
-  
   render() {
     return (
       <div>
@@ -31,4 +30,4 @@ class LC_screen extends Component {
     );
   }
 }
-export default LC_screen;
+export default LineChartScreen;

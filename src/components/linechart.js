@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import * as d3 from "d3";
 import { Col } from "react-bootstrap";
 
-class Linechart extends Component {
+class LineChart extends Component {
   drawLineChart() {
     const data = [
       { a: 1, b: 3 },
@@ -22,6 +22,7 @@ class Linechart extends Component {
       .select("#sg")
       .attr("width", svgWidth)
       .attr("height", svgHeight);
+    d3.select("g").remove();
     let g = svg
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -139,7 +140,7 @@ class Linechart extends Component {
       });
   }
   render() {
-    if (this.props.height > 1) this.drawLineChart(this.props);
+    if (this.props.height) this.drawLineChart(this.props);
     return (
       <div>
         <Col xs={12} md={12}>
@@ -150,4 +151,4 @@ class Linechart extends Component {
   }
 }
 
-export default Linechart;
+export default LineChart;
