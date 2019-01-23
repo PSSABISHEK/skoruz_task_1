@@ -4,13 +4,12 @@ import * as d3 from "d3";
 class BarChart extends Component {
   drawBarChart() {
     const data = [
-      { a: 2014, b: 100 },
-      { a: 2015, b: 150 },
-      { a: 2016, b: 400 },
-      { a: 2017, b: 550 },
-      { a: 2018, b: 700 },
-      { a: 2019, b: 900 },
-      { a: 2020, b: 250 }
+      { a: "01-15-2019", b: 3 },
+      { a: "01-16-2019", b: 6 },
+      { a: "01-17-2019", b: 2 },
+      { a: "01-18-2019", b: 12 },
+      { a: "01-19-2019", b: 8 },
+      { a: "01-20-2019", b: 13 }
     ];
     let xaxis = this.props.xaxis;
     let yaxis = this.props.yaxis;

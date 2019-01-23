@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ChartsType from "./components/ChartsType";
+import ChartsType from "./components/Main/ChartsType";
 
 class App extends Component {
   render() {

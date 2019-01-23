@@ -5,20 +5,22 @@ import { Col } from "react-bootstrap";
 class LineChart extends Component {
   drawLineChart() {
     const data = [
-      { a: 1, b: 3 },
-      { a: 2, b: 6 },
-      { a: 3, b: 2 },
-      { a: 4, b: 12 },
-      { a: 5, b: 8 },
-      { a: 9, b: 13 }
+      { a: "01-15-2019", b: 3 },
+      { a: "01-16-2019", b: 6 },
+      { a: "01-17-2019", b: 2 },
+      { a: "01-18-2019", b: 12 },
+      { a: "01-19-2019", b: 8 },
+      { a: "01-20-2019", b: 13 }
     ];
+
     let xaxis = this.props.xaxis;
     let yaxis = this.props.yaxis;
     let svgWidth = this.props.width,
       svgHeight = this.props.height;
-    let margin = { top: 20, right: 20, bottom: 30, left: 50 };
+    let margin = { top: 20, right: 50, bottom: 30, left: 50 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
+    let parseDate = d3.timeParse("%m-%d-%Y");
     let svg = d3
       .select("#sg")
       .attr("width", svgWidth)
@@ -27,9 +29,12 @@ class LineChart extends Component {
     let g = svg
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    let x = d3.scaleLinear().range([0, width]);
+    let x = d3.scaleTime().range([0, width]);
     let y = d3.scaleLinear().range([height, 0]);
-    let xAxis = d3.axisBottom(x);
+    let xAxis = d3
+      .axisBottom(x)
+      .ticks(data.length)
+      .tickFormat(d3.timeFormat("%m-%d-%Y"));
     let yAxis = d3.axisLeft(y);
     let line = d3
       .line()
@@ -39,12 +44,15 @@ class LineChart extends Component {
       .y(function(d) {
         return y(d.b);
       });
-    x.domain([
-      0,
-      d3.max(data, function(d) {
+    data.forEach(function(d) {
+      d.a = parseDate(d.a);
+      d.b = +d.b;
+    });
+    x.domain(
+      d3.extent(data, function(d) {
         return d.a;
       })
-    ]);
+    );
     y.domain([
       0,
       d3.max(data, function(d) {
