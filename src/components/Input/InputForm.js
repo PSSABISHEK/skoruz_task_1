@@ -8,17 +8,32 @@ import {
   Button
 } from "react-bootstrap";
 import { connect } from "react-redux";
+import Select from "react-select";
 
-class InputForLine extends Component {
+const options = [
+  { value: "line", label: "Line Graph" },
+  { value: "bar", label: "Bar Graph" }
+];
+
+class InputForBar extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       xaxis: "",
       yaxis: "",
       height: 0,
-      width: 0
+      width: 0,
+      selectedOption: { value: "line", label: "Line Graph" },
+      data: []
     };
   }
+
+  handleChangeSelect = selectedOption => {
+    this.setState({
+      selectedOption
+    });
+  };
+
   handleChange(e) {
     this.setState({
       [e.target.name]: e.target.value
@@ -32,11 +47,14 @@ class InputForLine extends Component {
     ) {
       alert("Enter both Height and Width");
     } else {
-      this.props.handler(
+      console.log(this.state.data);
+      this.props.handlerb(
         this.state.xaxis,
         this.state.yaxis,
         this.state.height,
-        this.state.width
+        this.state.width,
+        this.state.data,
+        this.state.selectedOption
       );
     }
   }
@@ -45,9 +63,19 @@ class InputForLine extends Component {
       <div>
         <Grid>
           <form autoComplete="off">
+            <Col xs={12} md={2}>
+              <ControlLabel>Chart Type</ControlLabel>
+            </Col>
+            <Col xs={4} md={10}>
+              <Select
+                value={this.state.selectedOption}
+                onChange={this.handleChangeSelect}
+                options={options}
+              />
+            </Col>
             <FormGroup controlId="formBasicText">
               <Col xs={12} md={2}>
-                <ControlLabel>X-Axis</ControlLabel>
+                <ControlLabel style={xaxisStyle}>X-Axis</ControlLabel>
               </Col>
               <Col xs={4} md={10}>
                 <FormControl
@@ -56,7 +84,7 @@ class InputForLine extends Component {
                   value={this.props.xaxis}
                   placeholder="Enter text"
                   onChange={this.handleChange.bind(this)}
-                  style={divstyle}
+                  style={xaxisStyle}
                 />
               </Col>
               <Col xs={12} md={2}>
@@ -95,6 +123,19 @@ class InputForLine extends Component {
                   value={this.props.width}
                   placeholder="Enter Number"
                   onChange={this.handleChange.bind(this)}
+                  style={divstyle}
+                />
+              </Col>
+              <Col xs={12} md={2}>
+                <ControlLabel>JSON</ControlLabel>
+              </Col>
+              <Col xs={4} md={10}>
+                <FormControl
+                  componentClass="textarea"
+                  placeholder="Enter JSON data"
+                  name="data"
+                  value={this.state.data}
+                  onChange={this.handleChange.bind(this)}
                 />
               </Col>
               <FormControl.Feedback />
@@ -110,10 +151,13 @@ class InputForLine extends Component {
 const divstyle = {
   marginBottom: "10px"
 };
-
+const xaxisStyle = {
+  marginTop: "10px",
+  marginBottom: "10px"
+};
 const mapStateToProps = state => {
   return state;
 };
-const Searchcom = connect(mapStateToProps)(InputForLine);
+const Searchcom = connect(mapStateToProps)(InputForBar);
 
 export default Searchcom;

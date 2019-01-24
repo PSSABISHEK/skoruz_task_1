@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import ChartsType from "./components/Main/ChartsType";
+import ChartType from "./components/Main/ChartType";
 
 class App extends Component {
   render() {
     return (
       <div>
-        <ChartsType />
+        <ChartType />
       </div>
     );
   }
