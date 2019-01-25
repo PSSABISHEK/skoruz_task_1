@@ -40,6 +40,7 @@ class InputForBar extends Component {
     });
   }
 
+  //SENDS STATES TO MAIN COMPONENT
   submiteval() {
     if (
       (this.state.height && !this.state.width) ||
@@ -47,7 +48,6 @@ class InputForBar extends Component {
     ) {
       alert("Enter both Height and Width");
     } else {
-      console.log(this.state.data);
       this.props.handlerb(
         this.state.xaxis,
         this.state.yaxis,

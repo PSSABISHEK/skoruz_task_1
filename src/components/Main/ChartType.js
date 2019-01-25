@@ -16,9 +16,10 @@ class ChartType extends Component {
     };
   }
 
+  //FUNCTION TO RENDER BARCHART
   drawBarChart(inputjson) {
     const data = inputjson["values"];
-    let xaxis = inputjson["y-axis"];
+    let xaxis = inputjson["x-axis"];
     let yaxis = inputjson["y-axis"];
     let svgWidth = inputjson["width"];
     let svgHeight = inputjson["height"];
@@ -27,7 +28,7 @@ class ChartType extends Component {
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
 
-    //Assigning chart dimension
+    //CHART DIMENSION
     let svg = d3
       .select("#sg2")
       .attr("width", svgWidth)
@@ -37,6 +38,7 @@ class ChartType extends Component {
 
     d3.select("g").remove();
 
+    //SCALES AND AXIS DECLARATION
     let g = svg
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -72,7 +74,8 @@ class ChartType extends Component {
           .tickFormat("")
       );
 
-    g.selectAll("rect") //Create Bar
+    //CREATE BAR
+    g.selectAll("rect")
       .data(data)
       .enter()
       .append("rect")
@@ -82,7 +85,7 @@ class ChartType extends Component {
       .attr("height", d => height - yScale(d.b))
       .attr("width", xScale.bandwidth());
 
-    //Co-ordinates Label
+    //LABEL FOR CO-ORDINATES
     if (svgWidth < 500) {
       g.selectAll(".text")
         .data(data)
@@ -117,7 +120,8 @@ class ChartType extends Component {
         });
     }
 
-    g.append("text") // Y-Axis Label
+    //Y-AXIS LABEL
+    g.append("text")
       .attr("x", -(height / 2))
       .attr("y", -(margin.left - 10))
       .attr("transform", "rotate(-90)")
@@ -125,6 +129,7 @@ class ChartType extends Component {
       .attr("stroke", "black")
       .text(yaxis);
 
+    //X-AXIS LABEL
     g.append("text") // X-Axis Label
       .attr("x", width / 2)
       .attr("y", height + 25)
@@ -133,9 +138,10 @@ class ChartType extends Component {
       .text(xaxis);
   }
 
+  //FUNCTION TO RENDER LINE CHART
   drawLineChart(inputjson) {
     const data = inputjson["values"];
-    let xaxis = inputjson["y-axis"];
+    let xaxis = inputjson["x-axis"];
     let yaxis = inputjson["y-axis"];
     let svgWidth = inputjson["width"];
     let svgHeight = inputjson["height"];
@@ -144,7 +150,7 @@ class ChartType extends Component {
     let height = svgHeight - margin.top - margin.bottom;
     let parseDate = d3.timeParse("%m-%d-%Y");
 
-    //Assigning chart dimension
+    //CHART DIMENSION
     let svg = d3
       .select("#sg2")
       .attr("width", svgWidth)
@@ -155,6 +161,8 @@ class ChartType extends Component {
     let g = svg
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    //SCALES AND AXIS DECLARATION
     let x = d3.scaleTime().range([0, width]);
     let y = d3.scaleLinear().range([height, 0]);
     let xAxis = d3
@@ -254,6 +262,7 @@ class ChartType extends Component {
       });
   }
 
+  //TAKES DATA FROM INPUTFORM
   form_submit(xaxis, yaxis, height, width, data, selectedOption) {
     this.setState(
       {
