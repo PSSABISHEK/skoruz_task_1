@@ -23,10 +23,14 @@ class ChartType extends Component {
     let yaxis = inputjson["y-axis"];
     let svgWidth = inputjson["width"];
     let svgHeight = inputjson["height"];
-
-    let margin = { top: 30, right: 30, bottom: 30, left: 30 };
+    let margin = { top: 30, right: 30, bottom: 30, left: 40 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
+    let parseDate = d3.timeParse("%m-%d-%Y");
+    data.forEach(function(d) {
+      d.a = parseDate(d.a);
+      d.b = +d.b;
+    });
 
     //CHART DIMENSION
     let svg = d3
@@ -36,6 +40,7 @@ class ChartType extends Component {
       .style("display", "block")
       .style("margin", "auto");
 
+    //REMOVE PREVIOUS GRAPH
     d3.select("g").remove();
 
     //SCALES AND AXIS DECLARATION
@@ -59,13 +64,16 @@ class ChartType extends Component {
       })
     ]);
 
+    //APPEND AXIS
     g.append("g")
       .attr("transform", `translate(0, ${height})`)
-      .call(d3.axisBottom(xScale));
-
+      .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%d")));
     g.append("g").call(d3.axisLeft(yScale));
+
+    //DRAW GRIDLINES
     g.append("g")
       .attr("class", "grid")
+      .style("opacity", 0.2)
       .call(
         d3
           .axisLeft()
@@ -85,7 +93,7 @@ class ChartType extends Component {
       .attr("height", d => height - yScale(d.b))
       .attr("width", xScale.bandwidth());
 
-    //LABEL FOR CO-ORDINATES
+    //LABELS AT INTERSECTION
     if (svgWidth < 500) {
       g.selectAll(".text")
         .data(data)
@@ -120,7 +128,7 @@ class ChartType extends Component {
         });
     }
 
-    //Y-AXIS LABEL
+    //AXIS LABEL
     g.append("text")
       .attr("x", -(height / 2))
       .attr("y", -(margin.left - 10))
@@ -128,9 +136,7 @@ class ChartType extends Component {
       .attr("text-anchor", "middle")
       .attr("stroke", "black")
       .text(yaxis);
-
-    //X-AXIS LABEL
-    g.append("text") // X-Axis Label
+    g.append("text")
       .attr("x", width / 2)
       .attr("y", height + 25)
       .attr("text-anchor", "middle")
@@ -145,10 +151,14 @@ class ChartType extends Component {
     let yaxis = inputjson["y-axis"];
     let svgWidth = inputjson["width"];
     let svgHeight = inputjson["height"];
-    let margin = { top: 30, right: 30, bottom: 30, left: 30 };
+    let margin = { top: 30, right: 30, bottom: 30, left: 40 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
     let parseDate = d3.timeParse("%m-%d-%Y");
+    data.forEach(function(d) {
+      d.a = parseDate(d.a);
+      d.b = +d.b;
+    });
 
     //CHART DIMENSION
     let svg = d3
@@ -157,19 +167,30 @@ class ChartType extends Component {
       .attr("height", svgHeight)
       .style("display", "block")
       .style("margin", "auto");
+
+    //REMOVES PREVIOUS GRAPH
     d3.select("g").remove();
+
+    //SCALES AND AXIS DECLARATION
     let g = svg
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    //SCALES AND AXIS DECLARATION
     let x = d3.scaleTime().range([0, width]);
     let y = d3.scaleLinear().range([height, 0]);
     let xAxis = d3
       .axisBottom(x)
       .ticks(data.length)
-      .tickFormat(d3.timeFormat("%m-%d-%Y"));
+      .tickFormat(d3.timeFormat("%d"));
     let yAxis = d3.axisLeft(y);
+    /* var area = d3
+      .area()
+      .x(function(d) {
+        return x(d.a);
+      })
+      .y0(height)
+      .y1(function(d) {
+        return y(d.b);
+      }); */
     let line = d3
       .line()
       .x(function(d) {
@@ -178,10 +199,6 @@ class ChartType extends Component {
       .y(function(d) {
         return y(d.b);
       });
-    data.forEach(function(d) {
-      d.a = parseDate(d.a);
-      d.b = +d.b;
-    });
     x.domain(
       d3.extent(data, function(d) {
         return d.a;
@@ -194,14 +211,21 @@ class ChartType extends Component {
       })
     ]);
 
-    //GRINDLINES FOR LINE PARALLEL TO X
+    //APPEND AXIS
+    g.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+      .select(".domain");
+    g.append("g").call(yAxis);
+
+    //DRAW GRINDLINES
     g.append("g")
       .attr("class", "grid")
+      .style("opacity", 0.2)
       .call(
         d3
-          .axisLeft()
-          .scale(y)
-          .tickSize(-width, 0, 0)
+          .axisLeft(y)
+          .tickSize(-width)
           .tickFormat("")
       );
 
@@ -215,13 +239,8 @@ class ChartType extends Component {
           .tickSize(-height, 0, 0)
           .tickFormat("")
       );*/
-    g.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis)
-      .select(".domain");
 
-    g.append("g").call(yAxis);
-
+    //AXIS LABLES
     g.append("text")
       .attr("x", -(height / 2))
       .attr("y", -(margin.left - 10))
@@ -229,7 +248,6 @@ class ChartType extends Component {
       .attr("text-anchor", "middle")
       .attr("stroke", "black")
       .text(yaxis);
-
     g.append("text")
       .attr("x", width / 2)
       .attr("y", height + 25)
@@ -237,6 +255,13 @@ class ChartType extends Component {
       .attr("stroke", "black")
       .text(xaxis);
 
+    //GIVES AREA UNDER THE GRAPH
+    /* g.append("path") 
+      .data([data])
+      .attr("class", "area")
+      .attr("d", area); */
+
+    //DRAW LINE
     g.append("path")
       .datum(data)
       .attr("fill", "none")
@@ -245,6 +270,22 @@ class ChartType extends Component {
       .attr("stroke-linecap", "round")
       .attr("stroke-width", 1.5)
       .attr("d", line);
+
+    //DOTS AT INTERSECTION
+    g.selectAll("circle")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr("r", 3.5)
+      .attr("fill", "steelblue")
+      .attr("cx", function(d) {
+        return x(d.a);
+      })
+      .attr("cy", function(d) {
+        return y(d.b);
+      });
+
+    //LABELS AT INTERSECTION
     g.selectAll(".text")
       .data(data)
       .enter()
@@ -255,6 +296,114 @@ class ChartType extends Component {
       })
       .attr("y", function(d) {
         return y(d.b) - 15;
+      })
+      .attr("dy", ".75em")
+      .text(function(d) {
+        return d.b;
+      });
+  }
+
+  drawScatterChart(inputjson) {
+    const data = inputjson["values"];
+    let xaxis = inputjson["x-axis"];
+    let yaxis = inputjson["y-axis"];
+    let svgWidth = inputjson["width"];
+    let svgHeight = inputjson["height"];
+    let margin = { top: 30, right: 30, bottom: 30, left: 40 };
+    let width = svgWidth - margin.left - margin.right;
+    let height = svgHeight - margin.top - margin.bottom;
+    let parseDate = d3.timeParse("%m-%d-%Y");
+    data.forEach(function(d) {
+      d.a = parseDate(d.a);
+      d.b = +d.b;
+    });
+
+    //CHART DIMENSION
+    let svg = d3
+      .select("#sg2")
+      .attr("width", svgWidth)
+      .attr("height", svgHeight)
+      .style("display", "block")
+      .style("margin", "auto");
+
+    //REMOVES PREVIOUS GRAPH
+    d3.select("g").remove();
+
+    //SCALES AND AXIS DECLARATION
+    let g = svg
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    const xScale = d3
+      .scalePoint()
+      .range([0, width])
+      .padding(0.3);
+    xScale.domain(
+      data.map(function(d) {
+        return d.a;
+      })
+    );
+    const yScale = d3.scaleLinear().range([height, 0]);
+    yScale.domain([
+      0,
+      d3.max(data, function(d) {
+        return d.b;
+      })
+    ]);
+
+    //APPENDS AXIS
+    g.append("g")
+      .attr("transform", `translate(0, ${height})`)
+      .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%d")));
+    g.append("g").call(d3.axisLeft(yScale));
+
+    //AXIS LABEL
+    g.append("text")
+      .attr("x", -(height / 2))
+      .attr("y", -(margin.left - 10))
+      .attr("transform", "rotate(-90)")
+      .attr("text-anchor", "middle")
+      .attr("stroke", "black")
+      .text(yaxis);
+    g.append("text")
+      .attr("x", width / 2)
+      .attr("y", height + 25)
+      .attr("text-anchor", "middle")
+      .attr("stroke", "black")
+      .text(xaxis);
+
+    //DRAW GRIDLINES
+    g.append("g")
+      .attr("class", "grid")
+      .style("opacity", 0.2)
+      .call(
+        d3
+          .axisLeft()
+          .scale(yScale)
+          .tickSize(-width, 0, 0)
+          .tickFormat("")
+      );
+
+    //CREATE CIRCLE
+    g.selectAll("circle")
+      .data(data)
+      .enter()
+      .append("circle")
+      .style("fill", "steelblue")
+      .attr("cx", d => xScale(d.a))
+      .attr("cy", d => yScale(d.b))
+      .attr("r", 3);
+
+    //LABELS AT INTERSECTION
+    g.selectAll(".text")
+      .data(data)
+      .enter()
+      .append("text")
+      .attr("class", "label")
+      .attr("x", function(d) {
+        return xScale(d.a) - 3;
+      })
+      .attr("y", function(d) {
+        return yScale(d.b) - 15;
       })
       .attr("dy", ".75em")
       .text(function(d) {
@@ -274,6 +423,7 @@ class ChartType extends Component {
         selectedOption: selectedOption
       },
       function() {
+        //CREATES JSON
         let inputjson = {
           "chart-type": this.state.selectedOption.value,
           height: this.state.height,
@@ -281,12 +431,15 @@ class ChartType extends Component {
           "x-axis": this.state.xaxis,
           "y-axis": this.state.yaxis,
           values: [
-            { a: "01-15-2019", b: 3 },
-            { a: "01-16-2019", b: 6 },
-            { a: "01-17-2019", b: 2 },
-            { a: "01-18-2019", b: 12 },
-            { a: "01-19-2019", b: 8 },
-            { a: "01-20-2019", b: 13 }
+            { a: "01-15-2019", b: 89 },
+            { a: "01-16-2019", b: 104 },
+            { a: "01-17-2019", b: 106 },
+            { a: "01-18-2019", b: 534 },
+            { a: "01-19-2019", b: 400 },
+            { a: "01-21-2019", b: 356 },
+            { a: "01-23-2019", b: 960 },
+            { a: "01-24-2019", b: 910 },
+            { a: "01-29-2019", b: 400 }
           ]
         };
 
@@ -294,6 +447,8 @@ class ChartType extends Component {
           this.drawBarChart(inputjson);
         } else if (inputjson["chart-type"] === "line") {
           this.drawLineChart(inputjson);
+        } else if (inputjson["chart-type"] === "scatter") {
+          this.drawScatterChart(inputjson);
         }
       }
     );

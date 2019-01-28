@@ -11,8 +11,9 @@ import { connect } from "react-redux";
 import Select from "react-select";
 
 const options = [
-  { value: "line", label: "Line Graph" },
-  { value: "bar", label: "Bar Graph" }
+  { value: "line", label: "Line Chart" },
+  { value: "bar", label: "Bar Chart" },
+  { value: "scatter", label: "Scatter Chart" }
 ];
 
 class InputForBar extends Component {
