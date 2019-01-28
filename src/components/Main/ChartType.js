@@ -117,7 +117,7 @@ class ChartType extends Component {
         .append("text")
         .attr("class", "label")
         .attr("x", function(d) {
-          return xScale(d.a);
+          return xScale(d.a) + (xScale.bandwidth() / 2 - 10);
         })
         .attr("y", function(d) {
           return yScale(d.b) - 10;
