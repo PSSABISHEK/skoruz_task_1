@@ -67,7 +67,7 @@ class InputForBar extends Component {
             <Col xs={12} md={2}>
               <ControlLabel>Chart Type</ControlLabel>
             </Col>
-            <Col xs={4} md={10}>
+            <Col xs={8} md={10}>
               <Select
                 value={this.state.selectedOption}
                 onChange={this.handleChangeSelect}
@@ -78,7 +78,7 @@ class InputForBar extends Component {
               <Col xs={12} md={2}>
                 <ControlLabel style={xaxisStyle}>X-Axis</ControlLabel>
               </Col>
-              <Col xs={4} md={10}>
+              <Col xs={8} md={10}>
                 <FormControl
                   type="text"
                   name="xaxis"
@@ -91,7 +91,7 @@ class InputForBar extends Component {
               <Col xs={12} md={2}>
                 <ControlLabel>Y-Axis</ControlLabel>
               </Col>
-              <Col xs={4} md={10}>
+              <Col xs={8} md={10}>
                 <FormControl
                   type="text"
                   name="yaxis"
@@ -104,7 +104,7 @@ class InputForBar extends Component {
               <Col xs={12} md={2}>
                 <ControlLabel>Height</ControlLabel>
               </Col>
-              <Col xs={4} md={10}>
+              <Col xs={8} md={10}>
                 <FormControl
                   type="text"
                   name="height"
@@ -117,7 +117,7 @@ class InputForBar extends Component {
               <Col xs={12} md={2}>
                 <ControlLabel>Width</ControlLabel>
               </Col>
-              <Col xs={4} md={10}>
+              <Col xs={8} md={10}>
                 <FormControl
                   type="text"
                   name="width"
@@ -130,18 +130,21 @@ class InputForBar extends Component {
               <Col xs={12} md={2}>
                 <ControlLabel>JSON</ControlLabel>
               </Col>
-              <Col xs={4} md={10}>
+              <Col xs={8} md={10}>
                 <FormControl
                   componentClass="textarea"
                   placeholder="Enter JSON data"
                   name="data"
                   value={this.state.data}
                   onChange={this.handleChange.bind(this)}
+                  style={divstyle}
                 />
               </Col>
               <FormControl.Feedback />
             </FormGroup>
-            <Button onClick={this.submiteval.bind(this)}>Submit</Button>
+            <Col xs={8} md={10}>
+              <Button onClick={this.submiteval.bind(this)}>Submit</Button>
+            </Col>
           </form>
         </Grid>
       </div>

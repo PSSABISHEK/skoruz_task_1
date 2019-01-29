@@ -177,6 +177,7 @@ class ChartType extends Component {
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     let x = d3.scaleTime().range([0, width]);
     let y = d3.scaleLinear().range([height, 0]);
+
     let xAxis = d3
       .axisBottom(x)
       .ticks(data.length)
@@ -218,28 +219,6 @@ class ChartType extends Component {
       .select(".domain");
     g.append("g").call(yAxis);
 
-    //DRAW GRINDLINES
-    g.append("g")
-      .attr("class", "grid")
-      .style("opacity", 0.2)
-      .call(
-        d3
-          .axisLeft(y)
-          .tickSize(-width)
-          .tickFormat("")
-      );
-
-    /*g.append("g") //FOR LINES PARALLEL TO Y
-      .attr("class", "grid")
-      .attr("transform", `translate(0, ${height})`)
-      .call(
-        d3
-          .axisBottom()
-          .scale(x)
-          .tickSize(-height, 0, 0)
-          .tickFormat("")
-      );*/
-
     //AXIS LABLES
     g.append("text")
       .attr("x", -(height / 2))
@@ -260,6 +239,28 @@ class ChartType extends Component {
       .data([data])
       .attr("class", "area")
       .attr("d", area); */
+
+    //DRAW GRINDLINES
+    g.append("g")
+      .attr("class", "grid")
+      .style("opacity", 0.2)
+      .call(
+        d3
+          .axisLeft(y)
+          .tickSize(-width, 0, 0)
+          .tickFormat("")
+      );
+
+    /*g.append("g") //FOR LINES PARALLEL TO Y
+    .attr("class", "grid")
+    .attr("transform", `translate(0, ${height})`)
+    .call(
+      d3
+        .axisBottom()
+        .scale(x)
+        .tickSize(-height, 0, 0)
+        .tickFormat("")
+    );*/
 
     //DRAW LINE
     g.append("path")
@@ -436,9 +437,9 @@ class ChartType extends Component {
             { a: "01-17-2019", b: 106 },
             { a: "01-18-2019", b: 534 },
             { a: "01-19-2019", b: 400 },
-            { a: "01-21-2019", b: 356 },
-            { a: "01-23-2019", b: 960 },
+            { a: "01-21-2019", b: 656 },
             { a: "01-24-2019", b: 910 },
+            { a: "01-25-2019", b: 1000 },
             { a: "01-29-2019", b: 400 }
           ]
         };
