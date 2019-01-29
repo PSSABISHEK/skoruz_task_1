@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import InputForm from "../Input/InputForm";
 import * as d3 from "d3";
 import { Col } from "react-bootstrap";
+import { feature } from "topojson";
 
 class ChartType extends Component {
   constructor(props, context) {
@@ -412,6 +413,57 @@ class ChartType extends Component {
       });
   }
 
+  drawGeoChart(inputjson) {
+    const data = inputjson["values"];
+    let xaxis = inputjson["x-axis"];
+    let yaxis = inputjson["y-axis"];
+    let svgWidth = inputjson["width"];
+    let svgHeight = inputjson["height"];
+    let margin = { top: 30, right: 30, bottom: 30, left: 40 };
+    let width = svgWidth - margin.left - margin.right;
+    let height = svgHeight - margin.top - margin.bottom;
+
+    var svg = d3
+      .select("#sg2")
+      .attr("width", svgWidth)
+      .attr("height", svgHeight)
+      .style("display", "block")
+      .style("margin", "auto");
+
+    //REMOVES PREVIOUS GRAPH
+    d3.select("g").remove();
+
+    var g = svg.append("g");
+
+    const geoProjection = d3
+      .geoMercator()
+      .center([0, 5])
+      .scale(100)
+      .rotate([-180, 0]);
+
+    var geoPath = d3.geoPath().projection(geoProjection);
+
+    d3.json("https://unpkg.com/world-atlas@1/world/110m.json").then(topo => {
+      const countries = feature(topo, topo.objects.countries);
+      g.selectAll("path")
+        .data(countries.features)
+        .enter()
+        .append("path")
+        .attr("fill", "#ccc")
+        .attr("d", geoPath);
+
+      g.selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("transform", function(d) {
+          return "translate(" + geoProjection([d.x.lon, d.x.lat]) + ")";
+        })
+        .attr("r", 5)
+        .style("fill", "red");
+    });
+  }
+
   //TAKES DATA FROM INPUTFORM
   form_submit(xaxis, yaxis, height, width, data, selectedOption) {
     this.setState(
@@ -425,24 +477,127 @@ class ChartType extends Component {
       },
       function() {
         //CREATES JSON
-        let inputjson = {
-          "chart-type": this.state.selectedOption.value,
-          height: this.state.height,
-          width: this.state.width,
-          "x-axis": this.state.xaxis,
-          "y-axis": this.state.yaxis,
-          values: [
-            { a: "01-15-2019", b: 89 },
-            { a: "01-16-2019", b: 104 },
-            { a: "01-17-2019", b: 106 },
-            { a: "01-18-2019", b: 534 },
-            { a: "01-19-2019", b: 400 },
-            { a: "01-21-2019", b: 656 },
-            { a: "01-24-2019", b: 910 },
-            { a: "01-25-2019", b: 1000 },
-            { a: "01-29-2019", b: 400 }
-          ]
-        };
+        let inputjson = [];
+        if (selectedOption.value === "geo") {
+          inputjson = {
+            "chart-type": this.state.selectedOption.value,
+            height: this.state.height,
+            width: this.state.width,
+            "x-axis": this.state.xaxis,
+            "y-axis": this.state.yaxis,
+            values: [
+              {
+                x: {
+                  code: "ZNZ",
+                  city: "ZANZIBAR",
+                  country: "TANZANIA",
+                  lat: -6.13,
+                  lon: 39.31
+                },
+                y: 402.5
+              },
+              {
+                x: {
+                  code: "TYO",
+                  city: "TOKYO",
+                  country: "JAPAN",
+                  lat: 35.68,
+                  lon: 139.76
+                },
+                y: 632.5
+              },
+              {
+                x: {
+                  code: "AKL",
+                  city: "AUCKLAND",
+                  country: "NEW ZEALAND",
+                  lat: -36.85,
+                  lon: 174.78
+                },
+                y: 232.2
+              },
+              {
+                x: {
+                  code: "BKK",
+                  city: "BANGKOK",
+                  country: "THAILAND",
+                  lat: 13.75,
+                  lon: 100.48
+                },
+                y: 932.2
+              },
+              {
+                x: {
+                  code: "DEL",
+                  city: "DELHI",
+                  country: "INDIA",
+                  lat: 29.01,
+                  lon: 77.38
+                },
+                y: 912.7
+              },
+              {
+                x: {
+                  code: "SIN",
+                  city: "SINGAPORE",
+                  country: "SINGAPOR",
+                  lat: 1.36,
+                  lon: 103.75
+                },
+                y: 824.1
+              },
+              {
+                x: {
+                  code: "BSB",
+                  city: "BRASILIA",
+                  country: "BRAZIL",
+                  lat: -15.67,
+                  lon: -47.43
+                },
+                y: 193.4
+              },
+              {
+                x: {
+                  code: "RIO",
+                  city: "RIO DE JANEIRO",
+                  country: "BRAZIL",
+                  lat: -22.9,
+                  lon: -43.24
+                },
+                y: 902
+              },
+              {
+                x: {
+                  code: "YTO",
+                  city: "TORONTO",
+                  country: "CANADA",
+                  lat: 43.64,
+                  lon: -79.4
+                },
+                y: 307.5
+              }
+            ]
+          };
+        } else {
+          inputjson = {
+            "chart-type": this.state.selectedOption.value,
+            height: this.state.height,
+            width: this.state.width,
+            "x-axis": this.state.xaxis,
+            "y-axis": this.state.yaxis,
+            values: [
+              { a: "01-15-2019", b: 89 },
+              { a: "01-16-2019", b: 104 },
+              { a: "01-17-2019", b: 106 },
+              { a: "01-18-2019", b: 534 },
+              { a: "01-19-2019", b: 400 },
+              { a: "01-21-2019", b: 656 },
+              { a: "01-24-2019", b: 910 },
+              { a: "01-25-2019", b: 1000 },
+              { a: "01-29-2019", b: 400 }
+            ]
+          };
+        }
 
         if (inputjson["chart-type"] === "bar") {
           this.drawBarChart(inputjson);
@@ -450,6 +605,8 @@ class ChartType extends Component {
           this.drawLineChart(inputjson);
         } else if (inputjson["chart-type"] === "scatter") {
           this.drawScatterChart(inputjson);
+        } else if (inputjson["chart-type"] === "geo") {
+          this.drawGeoChart(inputjson);
         }
       }
     );
