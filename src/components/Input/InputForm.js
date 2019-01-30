@@ -21,10 +21,15 @@ class InputForBar extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      chartname: "",
       xaxis: "",
       yaxis: "",
       height: 0,
       width: 0,
+      fSize: 0,
+      fColor: "",
+      fType: "",
+      chartColor: "",
       selectedOption: { value: "line", label: "Line Graph" },
       data: []
     };
@@ -51,8 +56,13 @@ class InputForBar extends Component {
       alert("Enter both Height and Width");
     } else {
       this.props.handlerb(
+        this.state.chartname,
         this.state.xaxis,
         this.state.yaxis,
+        this.state.fSize,
+        this.state.fColor,
+        this.state.fType,
+        this.state.chartColor,
         this.state.height,
         this.state.width,
         this.state.data,
@@ -76,8 +86,73 @@ class InputForBar extends Component {
               />
             </Col>
             <FormGroup controlId="formBasicText">
+              <Col xs={12} md={2} lg={2}>
+                <ControlLabel style={xaxisStyle}>Chart Name</ControlLabel>
+              </Col>
+              <Col xs={8} md={10} lg={4}>
+                <FormControl
+                  type="text"
+                  name="chartname"
+                  value={this.props.chartname}
+                  placeholder="Enter text"
+                  onChange={this.handleChange.bind(this)}
+                  style={xaxisStyle}
+                />
+              </Col>
+              <Col xs={12} md={2} lg={2}>
+                <ControlLabel style={xaxisStyle}>Chart Color</ControlLabel>
+              </Col>
+              <Col xs={8} md={10} lg={4}>
+                <FormControl
+                  type="text"
+                  name="chartColor"
+                  value={this.props.chartColor}
+                  placeholder="Enter text"
+                  onChange={this.handleChange.bind(this)}
+                  style={xaxisStyle}
+                />
+              </Col>
+              <Col xs={12} md={2} lg={2}>
+                <ControlLabel>Font Size</ControlLabel>
+              </Col>
+              <Col xs={8} md={10} lg={2}>
+                <FormControl
+                  type="text"
+                  name="fSize"
+                  value={this.props.fSize}
+                  placeholder="Enter number"
+                  onChange={this.handleChange.bind(this)}
+                  style={divstyle}
+                />
+              </Col>
+              <Col xs={12} md={2} lg={2}>
+                <ControlLabel>Font Color</ControlLabel>
+              </Col>
+              <Col xs={8} md={10} lg={2}>
+                <FormControl
+                  type="text"
+                  name="fColor"
+                  value={this.props.fColor}
+                  placeholder="Enter text"
+                  onChange={this.handleChange.bind(this)}
+                  style={divstyle}
+                />
+              </Col>
+              <Col xs={12} md={2} lg={2}>
+                <ControlLabel>Font Type</ControlLabel>
+              </Col>
+              <Col xs={8} md={10} lg={2}>
+                <FormControl
+                  type="text"
+                  name="fType"
+                  value={this.props.fType}
+                  placeholder="Enter text"
+                  onChange={this.handleChange.bind(this)}
+                  style={divstyle}
+                />
+              </Col>
               <Col xs={12} md={2}>
-                <ControlLabel style={xaxisStyle}>X-Axis</ControlLabel>
+                <ControlLabel style={divstyle}>X-Axis</ControlLabel>
               </Col>
               <Col xs={8} md={10}>
                 <FormControl
@@ -86,7 +161,7 @@ class InputForBar extends Component {
                   value={this.props.xaxis}
                   placeholder="Enter text"
                   onChange={this.handleChange.bind(this)}
-                  style={xaxisStyle}
+                  style={divstyle}
                 />
               </Col>
               <Col xs={12} md={2}>
