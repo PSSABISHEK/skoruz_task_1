@@ -26,10 +26,10 @@ class InputForBar extends Component {
       yaxis: "",
       height: 0,
       width: 0,
-      fSize: 0,
-      fColor: "",
+      fSize: 40,
+      fColor: "Black",
       fType: "",
-      chartColor: "",
+      chartColor: "Steelblue",
       selectedOption: { value: "line", label: "Line Graph" },
       data: []
     };
@@ -51,7 +51,8 @@ class InputForBar extends Component {
   submiteval() {
     if (
       (this.state.height && !this.state.width) ||
-      (this.state.width && !this.state.height)
+      (this.state.width && !this.state.height) ||
+      (!this.state.width && !this.state.height)
     ) {
       alert("Enter both Height and Width");
     } else {
