@@ -107,7 +107,7 @@ class GeoChart extends Component {
               onChange={this.onChange}
             />
           </Col>
-          <Col>
+          <Col xs={12} md={12} lg={12}>
             <svg id="sg4" />
           </Col>
         </Grid>

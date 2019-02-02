@@ -36,12 +36,6 @@ class LineChart extends Component {
     let margin = { top: 30, right: 30, bottom: 30, left: 40 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
-    let parseDate = d3.timeParse("%m-%d-%Y");
-    //let formatTime = d3.timeFormat("%e %B");
-    data.forEach(function(d) {
-      d.a = parseDate(d.a);
-      d.b = +d.b;
-    });
 
     //CHART DIMENSION
     let svg = d3
@@ -134,7 +128,7 @@ class LineChart extends Component {
     //DRAW GRINDLINES
     g.append("g")
       .attr("class", "grid")
-      .style("opacity", 0.2)
+      .style("opacity", 0.1)
       .call(
         d3
           .axisLeft(y)
@@ -253,7 +247,7 @@ class LineChart extends Component {
               onChange={this.onChange}
             />
           </Col>
-          <Col>
+          <Col xs={12} md={12} lg={12}>
             <svg id="sg1" />
           </Col>
         </Grid>

@@ -5,6 +5,7 @@ import LineChart from "../LineChart/LineChart";
 import BarChart from "../BarChart/BarChart";
 import ScatterChart from "../ScatterChart/ScatterChart";
 import GeoChart from "../GeoChart/GeoChart";
+import { timeParse } from "d3";
 
 class ChartType extends Component {
   constructor(props, context) {
@@ -191,6 +192,12 @@ class ChartType extends Component {
             ]
           };
         }
+
+        let parseDate = timeParse("%m-%d-%Y");
+        inputjson["values"].forEach(d => {
+          d.a = parseDate(d.a);
+          d.b = +d.b;
+        });
 
         if (inputjson["chart-type"] === "bar") {
           this.setState({

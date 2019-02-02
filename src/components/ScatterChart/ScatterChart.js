@@ -8,7 +8,7 @@ class ScatterChart extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      graphSize: 3
+      graphSize: 3,
     };
   }
 
@@ -34,11 +34,6 @@ class ScatterChart extends Component {
     let margin = { top: 30, right: 30, bottom: 30, left: 40 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
-    let parseDate = d3.timeParse("%m-%d-%Y");
-    data.forEach(function(d) {
-      d.a = parseDate(d.a);
-      d.b = +d.b;
-    });
 
     //CHART DIMENSION
     let svg = d3
@@ -76,10 +71,10 @@ class ScatterChart extends Component {
     g.append("g")
       .attr("transform", `translate(0, ${height})`)
       .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%d")))
-      .style("opacity", 0.2);
+      .style("opacity", 0.1);
     g.append("g")
       .call(d3.axisLeft(yScale))
-      .style("opacity", 0.2);
+      .style("opacity", 0.1);
 
     //AXIS LABEL
     g.append("text")
@@ -99,7 +94,7 @@ class ScatterChart extends Component {
     //DRAW GRIDLINES
     g.append("g")
       .attr("class", "grid")
-      .style("opacity", 0.2)
+      .style("opacity", 0.1)
       .call(
         d3
           .axisLeft()
@@ -169,7 +164,7 @@ class ScatterChart extends Component {
               onChange={this.onChange}
             />
           </Col>
-          <Col>
+          <Col xs={12} md={12} lg={12}> 
             <svg id="sg3" />
           </Col>
         </Grid>

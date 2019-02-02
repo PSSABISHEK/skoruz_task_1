@@ -8,7 +8,7 @@ class BarChart extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      graphSize: 3
+      graphSize: 40,
     };
   }
 
@@ -35,12 +35,7 @@ class BarChart extends Component {
     let margin = { top: 30, right: 30, bottom: 30, left: 40 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
-    let parseDate = d3.timeParse("%m-%d-%Y");
-    data.forEach(function(d) {
-      d.a = parseDate(d.a);
-      d.b = +d.b;
-    });
-
+      
     //CHART DIMENSION
     let svg = d3
       .select("#sg2")
@@ -78,15 +73,15 @@ class BarChart extends Component {
     g.append("g")
       .attr("transform", `translate(0, ${height})`)
       .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%d")))
-      .style("opacity", 0.2);
+      .style("opacity", 0.1);
     g.append("g")
       .call(d3.axisLeft(yScale))
-      .style("opacity", 0.2);
+      .style("opacity", 0.1);
 
     //DRAW GRIDLINES
     g.append("g")
       .attr("class", "grid")
-      .style("opacity", 0.2)
+      .style("opacity", 0.1)
       .call(
         d3
           .axisLeft()
@@ -107,21 +102,23 @@ class BarChart extends Component {
       .attr("width", lwidth);
 
     //LABELS AT INTERSECTION
-    g.selectAll(".text")
-      .data(data)
-      .enter()
-      .append("text")
-      .attr("class", "label")
-      .attr("x", function(d) {
-        return xScale(d.a) + (lwidth / 2 - 10);
-      })
-      .attr("y", function(d) {
-        return yScale(d.b) - 10;
-      })
-      .attr("dy", ".75em")
-      .text(function(d) {
-        return d.b;
-      });
+    if (this.state.graphSize !== 0) {
+      g.selectAll(".text")
+        .data(data)
+        .enter()
+        .append("text")
+        .attr("class", "label")
+        .attr("x", function(d) {
+          return xScale(d.a) + (lwidth / 2 - 10);
+        })
+        .attr("y", function(d) {
+          return yScale(d.b) - 10;
+        })
+        .attr("dy", ".75em")
+        .text(function(d) {
+          return d.b;
+        });
+    }
 
     //AXIS LABEL
     g.append("text")
@@ -149,28 +146,18 @@ class BarChart extends Component {
         <Grid>
           <Col xs={4} md={4} lg={4}>
             <Slider
-              min={1}
-              max={10}
+              min={0}
+              max={50}
               onChange={this.onChange}
               value={
                 typeof this.state.graphSize === "number"
                   ? this.state.graphSize
                   : 0
               }
-              step={0.1}
+              step={10}
             />
           </Col>
-          <Col xs={2} md={2} lg={2}>
-            <InputNumber
-              min={1}
-              max={10}
-              style={{ marginLeft: 16 }}
-              step={0.1}
-              value={this.state.graphSize}
-              onChange={this.onChange}
-            />
-          </Col>
-          <Col>
+          <Col xs={12} md={12} lg={12}>
             <svg id="sg2" />
           </Col>
         </Grid>
