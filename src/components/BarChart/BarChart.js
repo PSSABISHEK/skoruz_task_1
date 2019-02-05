@@ -1,14 +1,16 @@
 import React, { Component } from "react";
-import * as d3 from "d3";
 import { Col, Grid } from "react-bootstrap";
-import { Slider, InputNumber } from "antd";
+import { Slider } from "antd";
+import * as d3 from "d3";
 import "antd/dist/antd.css";
 
 class BarChart extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      graphSize: 40,
+      graphSize: 3,
+      //graphSizeMax: 0,
+      ctr: 0
     };
   }
 
@@ -20,6 +22,9 @@ class BarChart extends Component {
 
   componentDidMount() {
     this.drawBarChart();
+    /*  this.setState({
+      ctr: 1
+    }); */
   }
 
   //FUNCTION TO RENDER BAR CHART
@@ -32,10 +37,13 @@ class BarChart extends Component {
     let yaxis = inputjson["y-axis"];
     let svgWidth = inputjson["width"];
     let svgHeight = inputjson["height"];
-    let margin = { top: 30, right: 30, bottom: 30, left: 40 };
+    let fColor = inputjson["fColor"];
+    let fSize = inputjson["fSize"];
+    let fType = inputjson["fType"];
+    let margin = { top: 50, right: 50, bottom: 50, left: 50 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
-      
+
     //CHART DIMENSION
     let svg = d3
       .select("#sg2")
@@ -69,6 +77,11 @@ class BarChart extends Component {
       })
     ]);
 
+    /*  if (this.state.ctr === 0) {
+      this.setState({
+        graphSizeMax: Math.round(xScale.bandwidth())
+      });
+    } */
     //APPEND AXIS
     g.append("g")
       .attr("transform", `translate(0, ${height})`)
@@ -102,37 +115,43 @@ class BarChart extends Component {
       .attr("width", lwidth);
 
     //LABELS AT INTERSECTION
-    if (this.state.graphSize !== 0) {
-      g.selectAll(".text")
-        .data(data)
-        .enter()
-        .append("text")
-        .attr("class", "label")
-        .attr("x", function(d) {
-          return xScale(d.a) + (lwidth / 2 - 10);
-        })
-        .attr("y", function(d) {
-          return yScale(d.b) - 10;
-        })
-        .attr("dy", ".75em")
-        .text(function(d) {
-          return d.b;
-        });
-    }
+    //if (this.state.graphSize !== 0) {
+    g.selectAll(".text")
+      .data(data)
+      .enter()
+      .append("text")
+      .attr("class", "label")
+      .attr("x", function(d) {
+        return xScale(d.a) + (lwidth / 2 - 10);
+      })
+      .attr("y", function(d) {
+        return yScale(d.b) - 10;
+      })
+      .style("font-family", fType)
+      .style("font-size", fSize * 1.5)
+      .style("fill", fColor)
+      .text(function(d) {
+        return d.b;
+      });
+    //}
 
     //AXIS LABEL
     g.append("text")
       .attr("x", -(height / 2))
-      .attr("y", -(margin.left - 10))
+      .attr("y", -(margin.left - 20))
       .attr("transform", "rotate(-90)")
       .attr("text-anchor", "middle")
-      .attr("stroke", "black")
+      .style("font-family", fType)
+      .style("font-size", fSize)
+      .style("fill", fColor)
       .text(yaxis);
     g.append("text")
       .attr("x", width / 2)
-      .attr("y", height + 25)
+      .attr("y", height + 35)
       .attr("text-anchor", "middle")
-      .attr("stroke", "black")
+      .style("font-family", fType)
+      .style("font-size", fSize)
+      .style("fill", fColor)
       .text(xaxis);
   }
 
@@ -146,8 +165,8 @@ class BarChart extends Component {
         <Grid>
           <Col xs={4} md={4} lg={4}>
             <Slider
-              min={0}
-              max={50}
+              min={1}
+              max={100}
               onChange={this.onChange}
               value={
                 typeof this.state.graphSize === "number"

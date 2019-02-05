@@ -26,7 +26,7 @@ class InputForBar extends Component {
       yaxis: "",
       height: 0,
       width: 0,
-      fSize: 40,
+      fSize: 10,
       fColor: "Black",
       fType: "",
       chartColor: "Steelblue",
@@ -55,6 +55,8 @@ class InputForBar extends Component {
       (!this.state.width && !this.state.height)
     ) {
       alert("Enter both Height and Width");
+    } else if (this.state.fSize > 21) {
+      alert("Font size should be less than 20");
     } else {
       this.props.handlerb(
         this.state.chartname,

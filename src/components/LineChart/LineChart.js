@@ -33,7 +33,10 @@ class LineChart extends Component {
     let yaxis = inputjson["y-axis"];
     let svgWidth = inputjson["width"];
     let svgHeight = inputjson["height"];
-    let margin = { top: 30, right: 30, bottom: 30, left: 40 };
+    let fColor = inputjson["fColor"];
+    let fSize = inputjson["fSize"];
+    let fType = inputjson["fType"];
+    let margin = { top: 50, right: 50, bottom: 50, left: 50 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
 
@@ -107,16 +110,20 @@ class LineChart extends Component {
     //AXIS LABLES
     g.append("text")
       .attr("x", -(height / 2))
-      .attr("y", -(margin.left - 10))
+      .attr("y", -(margin.left - 20))
       .attr("transform", "rotate(-90)")
       .attr("text-anchor", "middle")
-      .attr("stroke", "black")
+      .style("font-family", fType)
+      .style("font-size", fSize * 1.5)
+      .style("fill", fColor)
       .text(yaxis);
     g.append("text")
       .attr("x", width / 2)
-      .attr("y", height + 25)
+      .attr("y", height + 35)
       .attr("text-anchor", "middle")
-      .attr("stroke", "black")
+      .style("font-family", fType)
+      .style("font-size", fSize * 1.5)
+      .style("fill", fColor)
       .text(xaxis);
 
     //GIVES AREA UNDER THE GRAPH
@@ -157,10 +164,6 @@ class LineChart extends Component {
       .attr("stroke-width", this.state.graphSize)
       .attr("d", line);
 
-    /* var div = g
-      .append("text")
-      //.attr("class", tooltip)
-      .style("opacity", 0); */
     //DOTS AT INTERSECTION
     g.selectAll("circle")
       .data(data)
@@ -174,16 +177,6 @@ class LineChart extends Component {
       .attr("cy", function(d) {
         return y(d.b);
       });
-    /* .on("mouseover", function(d) {
-        return div
-          .html(formatTime(d.a) + d.b)
-          .style("opacity", 0.9)
-          .style("left", d3.event.pageX + "px")
-          .style("top", d3.event.pageY - 5 + "px");
-      })
-      .on("mouseout", function(d) {
-        div.style("opacity", 0);
-      }); */
 
     //LABELS AT INTERSECTION
     g.selectAll(".text")
@@ -201,14 +194,17 @@ class LineChart extends Component {
         } else {
           if (data[i + 1].b >= d.b) {
             i += 1;
-            return y(d.b) + 12;
+            return y(d.b) + 18;
           } else {
             i += 1;
             return y(d.b) - 18;
           }
         }
       })
-      .attr("dy", ".75em")
+      .style("font-family", fType)
+      .style("font-size", fSize)
+      .style("fill", fColor)
+      //.attr("dy", ".75em")
       .text(function(d) {
         return d.b;
       });

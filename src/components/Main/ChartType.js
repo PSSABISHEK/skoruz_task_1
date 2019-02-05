@@ -66,6 +66,7 @@ class ChartType extends Component {
             chartColor: this.state.chartColor,
             height: this.state.height,
             width: this.state.width,
+            fColor: this.state.fColor,
             "x-axis": this.state.xaxis,
             "y-axis": this.state.yaxis,
             values: [
@@ -177,6 +178,9 @@ class ChartType extends Component {
             chartColor: this.state.chartColor,
             height: this.state.height,
             width: this.state.width,
+            fColor: this.state.fColor,
+            fSize: this.state.fSize,
+            fType: this.state.fType,
             "x-axis": this.state.xaxis,
             "y-axis": this.state.yaxis,
             values: [
@@ -191,13 +195,12 @@ class ChartType extends Component {
               { a: "01-29-2019", b: 255 }
             ]
           };
+          let parseDate = timeParse("%m-%d-%Y");
+          inputjson["values"].forEach(d => {
+            d.a = parseDate(d.a);
+            d.b = +d.b;
+          });
         }
-
-        let parseDate = timeParse("%m-%d-%Y");
-        inputjson["values"].forEach(d => {
-          d.a = parseDate(d.a);
-          d.b = +d.b;
-        });
 
         if (inputjson["chart-type"] === "bar") {
           this.setState({

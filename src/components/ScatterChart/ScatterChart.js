@@ -8,7 +8,7 @@ class ScatterChart extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      graphSize: 3,
+      graphSize: 3
     };
   }
 
@@ -31,7 +31,10 @@ class ScatterChart extends Component {
     let yaxis = inputjson["y-axis"];
     let svgWidth = inputjson["width"];
     let svgHeight = inputjson["height"];
-    let margin = { top: 30, right: 30, bottom: 30, left: 40 };
+    let fColor = inputjson["fColor"];
+    let fSize = inputjson["fSize"];
+    let fType = inputjson["fType"];
+    let margin = { top: 50, right: 50, bottom: 50, left: 50 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
 
@@ -79,16 +82,20 @@ class ScatterChart extends Component {
     //AXIS LABEL
     g.append("text")
       .attr("x", -(height / 2))
-      .attr("y", -(margin.left - 10))
+      .attr("y", -(margin.left - 20))
       .attr("transform", "rotate(-90)")
       .attr("text-anchor", "middle")
-      .attr("stroke", "black")
+      .style("font-family", fType)
+      .style("font-size", fSize * 1.5)
+      .style("fill", fColor)
       .text(yaxis);
     g.append("text")
       .attr("x", width / 2)
-      .attr("y", height + 25)
+      .attr("y", height + 35)
       .attr("text-anchor", "middle")
-      .attr("stroke", "black")
+      .style("font-family", fType)
+      .style("font-size", fSize * 1.5)
+      .style("fill", fColor)
       .text(xaxis);
 
     //DRAW GRIDLINES
@@ -125,7 +132,9 @@ class ScatterChart extends Component {
       .attr("y", function(d) {
         return yScale(d.b) - 15;
       })
-      .attr("dy", ".75em")
+      .style("font-family", fType)
+      .style("font-size", fSize)
+      .style("fill", fColor)
       .text(function(d) {
         return d.b;
       });
@@ -164,7 +173,7 @@ class ScatterChart extends Component {
               onChange={this.onChange}
             />
           </Col>
-          <Col xs={12} md={12} lg={12}> 
+          <Col xs={12} md={12} lg={12}>
             <svg id="sg3" />
           </Col>
         </Grid>
