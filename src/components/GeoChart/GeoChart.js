@@ -27,16 +27,13 @@ class GeoChart extends Component {
     let inputjson = this.props.inputjson;
     const data = inputjson["values"];
     let chartColor = inputjson["chartColor"];
-    //let xaxis = inputjson["x-axis"];
-    //let yaxis = inputjson["y-axis"];
+    let xaxis = inputjson["x-axis"];
+    let yaxis = inputjson["y-axis"];
     let svgWidth = inputjson["width"];
     let svgHeight = inputjson["height"];
     let fColor = inputjson["fColor"];
     let fSize = inputjson["fSize"];
     let fType = inputjson["fType"];
-    //let margin = { top: 30, right: 30, bottom: 30, left: 40 };
-    //let width = svgWidth - margin.left - margin.right;
-    //let height = svgHeight - margin.top - margin.bottom;
 
     var svg = d3
       .select("#sg4")
@@ -89,6 +86,21 @@ class GeoChart extends Component {
         .text(function(d) {
           return d.x.country + "  " + d.y;
         });
+
+      g.append("text")
+        .attr("x", svgWidth / 2)
+        .attr("y", svgHeight - 10)
+        .attr("text-anchor", "middle")
+        .style("font-family", fType)
+        .style("font-size", fSize * 1.5)
+        .style("fill", fColor)
+        .text(xaxis)
+        .append("tspan")
+        .style("font-weight", "bold")
+        .text(" vs ")
+        .append("tspan")
+        .style("font-weight", "normal")
+        .text(yaxis);
     });
   }
 
