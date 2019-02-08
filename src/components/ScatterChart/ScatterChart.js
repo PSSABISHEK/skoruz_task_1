@@ -125,7 +125,6 @@ class ScatterChart extends Component {
       .data(data)
       .enter()
       .append("text")
-      .attr("class", "label")
       .attr("x", function(d) {
         return xScale(d.a) - 3;
       })

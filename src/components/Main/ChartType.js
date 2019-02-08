@@ -67,6 +67,8 @@ class ChartType extends Component {
             height: this.state.height,
             width: this.state.width,
             fColor: this.state.fColor,
+            fSize: this.state.fSize,
+            fType: this.state.fType,
             "x-axis": this.state.xaxis,
             "y-axis": this.state.yaxis,
             values: [
@@ -92,16 +94,6 @@ class ChartType extends Component {
               },
               {
                 x: {
-                  code: "AKL",
-                  city: "AUCKLAND",
-                  country: "NEW ZEALAND",
-                  lat: -36.85,
-                  lon: 174.78
-                },
-                y: 232.2
-              },
-              {
-                x: {
                   code: "BKK",
                   city: "BANGKOK",
                   country: "THAILAND",
@@ -124,7 +116,7 @@ class ChartType extends Component {
                 x: {
                   code: "SIN",
                   city: "SINGAPORE",
-                  country: "SINGAPOR",
+                  country: "SINGAPORE",
                   lat: 1.36,
                   lon: 103.75
                 },

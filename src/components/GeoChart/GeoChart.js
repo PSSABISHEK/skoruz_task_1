@@ -31,6 +31,9 @@ class GeoChart extends Component {
     //let yaxis = inputjson["y-axis"];
     let svgWidth = inputjson["width"];
     let svgHeight = inputjson["height"];
+    let fColor = inputjson["fColor"];
+    let fSize = inputjson["fSize"];
+    let fType = inputjson["fType"];
     //let margin = { top: 30, right: 30, bottom: 30, left: 40 };
     //let width = svgWidth - margin.left - margin.right;
     //let height = svgHeight - margin.top - margin.bottom;
@@ -71,6 +74,21 @@ class GeoChart extends Component {
         })
         .attr("r", this.state.graphSize)
         .style("fill", chartColor);
+
+      g.selectAll("text")
+        .data(data)
+        .enter()
+        .append("text")
+        .attr("transform", function(d) {
+          return "translate(" + geoProjection([d.x.lon + 2, d.x.lat]) + ")";
+        })
+        .style("font-family", fType)
+        .style("font-size", fSize)
+        .style("fill", fColor)
+        //.style("font-weight", 'bold')
+        .text(function(d) {
+          return d.x.country + "  " + d.y;
+        });
     });
   }
 

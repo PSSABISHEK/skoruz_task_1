@@ -120,7 +120,6 @@ class BarChart extends Component {
       .data(data)
       .enter()
       .append("text")
-      .attr("class", "label")
       .attr("x", function(d) {
         return xScale(d.a) + (lwidth / 2 - 10);
       })
@@ -142,7 +141,7 @@ class BarChart extends Component {
       .attr("transform", "rotate(-90)")
       .attr("text-anchor", "middle")
       .style("font-family", fType)
-      .style("font-size", fSize)
+      .style("font-size", fSize * 1.5)
       .style("fill", fColor)
       .text(yaxis);
     g.append("text")
@@ -150,7 +149,7 @@ class BarChart extends Component {
       .attr("y", height + 35)
       .attr("text-anchor", "middle")
       .style("font-family", fType)
-      .style("font-size", fSize)
+      .style("font-size", fSize * 1.5)
       .style("fill", fColor)
       .text(xaxis);
   }

@@ -39,7 +39,7 @@ class LineChart extends Component {
     let margin = { top: 50, right: 50, bottom: 50, left: 50 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
-
+    let formatDate = d3.timeFormat("%d-%b");
     //CHART DIMENSION
     let svg = d3
       .select("#sg1")
@@ -164,6 +164,13 @@ class LineChart extends Component {
       .attr("stroke-width", this.state.graphSize)
       .attr("d", line);
 
+    var myTool = d3
+      .select("#sg1")
+      .append("div")
+      .attr("class", tooltip)
+      .style("opacity", 0)
+      .style("display", "none");
+
     //DOTS AT INTERSECTION
     g.selectAll("circle")
       .data(data)
@@ -176,6 +183,31 @@ class LineChart extends Component {
       })
       .attr("cy", function(d) {
         return y(d.b);
+      })
+      .on("mouseover", function(d) {
+        /* d3.select(this)
+          .transition()
+          .duration(500)
+          .attr("x", function(d) {
+            return x(d.a) - 30;
+          })
+          .style("cursor", "pointer")
+          .attr("width", 60); */
+        myTool
+          .transition() //Opacity transition when the tooltip appears
+          .duration(500)
+          .style("opacity", "1")
+          .style("display", "inline") //The tooltip appears
+          .text(formatDate(d.a) + " , " + d.b)
+          .style("left", d3.event.pageX - 30 + "px")
+          .style("top", d3.event.pageY - 20 + "px");
+      })
+      .on("mouseout", function(d) {
+        myTool
+          .transition() //Opacity transition when the tooltip disappears
+          .duration(500)
+          .style("opacity", "0")
+          .style("display", "none"); //The tooltip disappears
       });
 
     //LABELS AT INTERSECTION
@@ -183,7 +215,6 @@ class LineChart extends Component {
       .data(data)
       .enter()
       .append("text")
-      .attr("class", "label")
       .attr("x", function(d) {
         return x(d.a) - 15;
       })
@@ -204,7 +235,6 @@ class LineChart extends Component {
       .style("font-family", fType)
       .style("font-size", fSize)
       .style("fill", fColor)
-      //.attr("dy", ".75em")
       .text(function(d) {
         return d.b;
       });
@@ -253,3 +283,15 @@ class LineChart extends Component {
 }
 
 export default LineChart;
+
+let tooltip = {
+  position: "absolute",
+  "text-align": "center",
+  width: "60px",
+  height: "28px",
+  padding: "2px",
+  font: "12px",
+  background: "lightsteelblue",
+  border: "0px",
+  "pointer-events": "none"
+};
