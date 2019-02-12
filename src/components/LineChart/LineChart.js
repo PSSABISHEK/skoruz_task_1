@@ -163,11 +163,9 @@ class LineChart extends Component {
       .attr("stroke-linecap", "round")
       .attr("stroke-width", this.state.graphSize)
       .attr("d", line);
-
-    var myTool = d3
-      .select("#sg1")
-      .append("div")
-      .attr("class", tooltip)
+      
+    let myTool = g.selectAll("text")
+      .append("text")
       .style("opacity", 0)
       .style("display", "none");
 
@@ -185,29 +183,10 @@ class LineChart extends Component {
         return y(d.b);
       })
       .on("mouseover", function(d) {
-        /* d3.select(this)
-          .transition()
-          .duration(500)
-          .attr("x", function(d) {
-            return x(d.a) - 30;
-          })
-          .style("cursor", "pointer")
-          .attr("width", 60); */
-        myTool
-          .transition() //Opacity transition when the tooltip appears
-          .duration(500)
-          .style("opacity", "1")
-          .style("display", "inline") //The tooltip appears
-          .text(formatDate(d.a) + " , " + d.b)
-          .style("left", d3.event.pageX - 30 + "px")
-          .style("top", d3.event.pageY - 20 + "px");
+        
       })
       .on("mouseout", function(d) {
-        myTool
-          .transition() //Opacity transition when the tooltip disappears
-          .duration(500)
-          .style("opacity", "0")
-          .style("display", "none"); //The tooltip disappears
+        
       });
 
     //LABELS AT INTERSECTION

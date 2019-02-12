@@ -5,6 +5,7 @@ import LineChart from "../LineChart/LineChart";
 import BarChart from "../BarChart/BarChart";
 import ScatterChart from "../ScatterChart/ScatterChart";
 import GeoChart from "../GeoChart/GeoChart";
+import PieChart from "../PieChart/PieChart";
 import { timeParse } from "d3";
 
 class ChartType extends Component {
@@ -25,7 +26,8 @@ class ChartType extends Component {
       linechart: "",
       barchart: "",
       scatterchart: "",
-      geochart: ""
+      geochart: "",
+      piechart: ""
     };
   }
 
@@ -197,31 +199,42 @@ class ChartType extends Component {
         if (inputjson["chart-type"] === "bar") {
           this.setState({
             linechart: "",
+            barchart: <BarChart inputjson={inputjson} />,
             scatterchart: "",
             geochart: "",
-            barchart: <BarChart inputjson={inputjson} />
+            piechart: "",
           });
         } else if (inputjson["chart-type"] === "line") {
           this.setState({
+            linechart: <LineChart inputjson={inputjson} />,
             barchart: "",
             scatterchart: "",
             geochart: "",
-            linechart: <LineChart inputjson={inputjson} />
+            piechart:""
           });
-          //this.drawLineChart(inputjson);
         } else if (inputjson["chart-type"] === "scatter") {
           this.setState({
-            barchart: "",
             linechart: "",
+            barchart: "",
+            scatterchart: <ScatterChart inputjson={inputjson} />,
             geochart: "",
-            scatterchart: <ScatterChart inputjson={inputjson} />
+            piechart: "",
           });
         } else if (inputjson["chart-type"] === "geo") {
           this.setState({
+            linechart: "",
+            barchart: "",
+            scatterchart: "",
+            geochart: <GeoChart inputjson={inputjson} />,
+            piechart: "",
+          });
+        } else if (inputjson["chart-type"] === "pie") {
+          this.setState({
             barchart: "",
             linechart: "",
             scatterchart: "",
-            geochart: <GeoChart inputjson={inputjson} />
+            geochart: "",
+            piechart: <PieChart inputjson={inputjson} />
           });
         }
       }
@@ -248,6 +261,7 @@ class ChartType extends Component {
             {this.state.barchart}
             {this.state.scatterchart}
             {this.state.geochart}
+            {this.state.piechart}
           </Col>
         </Grid>
       </div>

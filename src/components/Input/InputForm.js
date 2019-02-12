@@ -14,7 +14,8 @@ const options = [
   { value: "line", label: "Line Chart" },
   { value: "bar", label: "Bar Chart" },
   { value: "scatter", label: "Scatter Chart" },
-  { value: "geo", label: "Geo Chart" }
+  { value: "geo", label: "Geo Chart" },
+  { value: "pie", label: "Pie Chart" }
 ];
 
 class InputForBar extends Component {
