@@ -17,12 +17,14 @@ class ChartType extends Component {
       yaxis: "",
       height: 0,
       width: 0,
-      fSize: 0,
-      fColor: "",
-      fType: "",
+      titlefColor: "",
+      titlefSize: 0,
+      labelfSize: 0,
+      labelfColor: "",
       chartColor: "",
+      selectedOption: [],
+      selectedTheme: [],
       data: [],
-      selectedOption: {},
       linechart: "",
       barchart: "",
       scatterchart: "",
@@ -36,41 +38,45 @@ class ChartType extends Component {
     chartname,
     xaxis,
     yaxis,
-    fSize,
-    fColor,
-    fType,
-    chartColor,
+    titlefSize,
+    titlefColor,
+    labelfSize,
+    labelfColor,
     height,
     width,
     data,
-    selectedOption
+    selectedOption,
+    selectedTheme
   ) {
     this.setState(
       {
         chartname,
-        chartColor,
         xaxis,
         yaxis,
-        fSize,
-        fColor,
-        fType,
+        titlefSize,
+        titlefColor,
+        labelfSize,
+        labelfColor,
         height,
         width,
         data,
-        selectedOption
+        selectedOption,
+        selectedTheme
       },
       function() {
         //CREATES JSON
+
         let inputjson = [];
-        if (selectedOption.value === "geo") {
+        if (this.state.selectedOption.value === "geo") {
           inputjson = {
             "chart-type": this.state.selectedOption.value,
-            chartColor: this.state.chartColor,
+            chartColor: this.state.selectedTheme.value,
+            titlefSize: this.state.titlefSize,
+            titlefColor: this.state.titlefColor,
+            labelfSize: this.state.labelfSize,
+            labelfColor: this.state.labelfColor,
             height: this.state.height,
             width: this.state.width,
-            fColor: this.state.fColor,
-            fSize: this.state.fSize,
-            fType: this.state.fType,
             "x-axis": this.state.xaxis,
             "y-axis": this.state.yaxis,
             values: [
@@ -167,14 +173,17 @@ class ChartType extends Component {
             ]
           };
         } else {
+          console.log(this.state);
+
           inputjson = {
             "chart-type": this.state.selectedOption.value,
-            chartColor: this.state.chartColor,
+            chartColor: this.state.selectedTheme.value,
+            titlefSize: this.state.titlefSize,
+            titlefColor: this.state.titlefColor,
+            labelfSize: this.state.labelfSize,
+            labelfColor: this.state.labelfColor,
             height: this.state.height,
             width: this.state.width,
-            fColor: this.state.fColor,
-            fSize: this.state.fSize,
-            fType: this.state.fType,
             "x-axis": this.state.xaxis,
             "y-axis": this.state.yaxis,
             values: [
@@ -202,7 +211,7 @@ class ChartType extends Component {
             barchart: <BarChart inputjson={inputjson} />,
             scatterchart: "",
             geochart: "",
-            piechart: "",
+            piechart: ""
           });
         } else if (inputjson["chart-type"] === "line") {
           this.setState({
@@ -210,7 +219,7 @@ class ChartType extends Component {
             barchart: "",
             scatterchart: "",
             geochart: "",
-            piechart:""
+            piechart: ""
           });
         } else if (inputjson["chart-type"] === "scatter") {
           this.setState({
@@ -218,7 +227,7 @@ class ChartType extends Component {
             barchart: "",
             scatterchart: <ScatterChart inputjson={inputjson} />,
             geochart: "",
-            piechart: "",
+            piechart: ""
           });
         } else if (inputjson["chart-type"] === "geo") {
           this.setState({
@@ -226,7 +235,7 @@ class ChartType extends Component {
             barchart: "",
             scatterchart: "",
             geochart: <GeoChart inputjson={inputjson} />,
-            piechart: "",
+            piechart: ""
           });
         } else if (inputjson["chart-type"] === "pie") {
           this.setState({
@@ -244,9 +253,8 @@ class ChartType extends Component {
   render() {
     const chartnamestyle = {
       textAlign: "center",
-      fontSize: this.state.fSize + "px",
-      color: this.state.fColor,
-      fontFamily: this.state.fType
+      fontSize: this.state.titlefSize + "px",
+      color: this.state.titlefColor,
     };
 
     return (

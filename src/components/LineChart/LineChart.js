@@ -33,13 +33,12 @@ class LineChart extends Component {
     let yaxis = inputjson["y-axis"];
     let svgWidth = inputjson["width"];
     let svgHeight = inputjson["height"];
-    let fColor = inputjson["fColor"];
-    let fSize = inputjson["fSize"];
-    let fType = inputjson["fType"];
+    let fColor = inputjson["labelfColor"];
+    let fSize = inputjson["labelfSize"];
     let margin = { top: 50, right: 50, bottom: 50, left: 50 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
-    let formatDate = d3.timeFormat("%d-%b");
+    
     //CHART DIMENSION
     let svg = d3
       .select("#sg1")
@@ -113,7 +112,6 @@ class LineChart extends Component {
       .attr("y", -(margin.left - 20))
       .attr("transform", "rotate(-90)")
       .attr("text-anchor", "middle")
-      .style("font-family", fType)
       .style("font-size", fSize * 1.5)
       .style("fill", fColor)
       .text(yaxis);
@@ -121,7 +119,6 @@ class LineChart extends Component {
       .attr("x", width / 2)
       .attr("y", height + 35)
       .attr("text-anchor", "middle")
-      .style("font-family", fType)
       .style("font-size", fSize * 1.5)
       .style("fill", fColor)
       .text(xaxis);
@@ -158,13 +155,14 @@ class LineChart extends Component {
     g.append("path")
       .datum(data)
       .attr("fill", "none")
-      .attr("stroke", chartColor)
+      .attr("stroke", "steelblue")
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
       .attr("stroke-width", this.state.graphSize)
       .attr("d", line);
-      
-    let myTool = g.selectAll("text")
+
+    let myTool = g
+      .selectAll("text")
       .append("text")
       .style("opacity", 0)
       .style("display", "none");
@@ -175,19 +173,15 @@ class LineChart extends Component {
       .enter()
       .append("circle")
       .attr("r", (this.state.graphSize * 3.5) / 2)
-      .attr("fill", chartColor)
+      .attr("fill", "steelblue")
       .attr("cx", function(d) {
         return x(d.a);
       })
       .attr("cy", function(d) {
         return y(d.b);
       })
-      .on("mouseover", function(d) {
-        
-      })
-      .on("mouseout", function(d) {
-        
-      });
+      .on("mouseover", function(d) {})
+      .on("mouseout", function(d) {});
 
     //LABELS AT INTERSECTION
     g.selectAll(".text")
@@ -211,7 +205,6 @@ class LineChart extends Component {
           }
         }
       })
-      .style("font-family", fType)
       .style("font-size", fSize)
       .style("fill", fColor)
       .text(function(d) {

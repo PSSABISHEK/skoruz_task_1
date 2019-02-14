@@ -8,7 +8,7 @@ class PieChart extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      iRadius: 100,
+      MaxRadius: "",
       dRadius: "",
       ctr: 0
     };
@@ -22,6 +22,12 @@ class PieChart extends Component {
 
   componentDidMount() {
     this.drawPieChart();
+  }
+
+  componentWillReceiveProps(nextprops) {
+    this.setState({
+      ctr: 0
+    });
   }
 
   drawPieChart() {
@@ -39,18 +45,13 @@ class PieChart extends Component {
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
     if (this.state.ctr === 0) {
-      this.setState(
-        {
-          iRadius: Math.min(svgHeight, svgWidth) / 2,
-          dRadius: Math.min(svgHeight, svgWidth) / 2,
-          ctr: 1
-        },
-        function() {
-          console.log(this.state.iRadius);
-        }
-      );
+      this.setState({
+        MaxRadius: Math.min(svgHeight, svgWidth) / 2 - 50,
+        dRadius: Math.min(svgHeight, svgWidth) / 2 - 50,
+        ctr: 1
+      });
     }
-    let radius = this.state.dRadius
+    let radius = this.state.dRadius;
     //CHART DIMENSION
     let svg = d3
       .select("#sg5")
@@ -68,23 +69,56 @@ class PieChart extends Component {
       .value(function(d) {
         return d.b;
       })(data);
-
+    let colors = d3
+      .scaleSequential()
+      .interpolator(d3.interpolateReds)
+      .domain([
+        0,
+        d3.max(data, function(d) {
+          return d.b;
+        })
+      ]);
     let segments = d3
       .arc()
       .innerRadius(0)
       .outerRadius(radius)
-      .padAngle(0.05)
       .padRadius(50);
 
+    //CONSTRUCT PIE CHART
     let g = svg
       .append("g")
-      .attr("transform", "translate(250, 250)")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
       .selectAll("path")
       .data(pievalues);
-
     g.enter()
       .append("path")
       .attr("d", segments);
+
+    //COLORS FOR EACH PIE
+    g.enter()
+      .append("path")
+      .attr("d", segments)
+      .attr("fill", function(d) {
+        return colors(d.data.b);
+      });
+
+    //LABELS FOR EACH PIE
+    /* let label = d3
+      .select("g")
+      .selectAll("text")
+      .data(pievalues);
+    label
+      .enter()
+      .append("text")
+      .attr("transform", function(d) {
+        return "translate(" + segments.centroid(d) + ")";
+      })
+      .style("font-family", fType)
+      .style("font-size", fSize)
+      .style("fill", fColor)
+      .text(function(d) {
+        return d.data.b;
+      }); */
   }
 
   componentDidUpdate() {
@@ -97,8 +131,8 @@ class PieChart extends Component {
         <Grid>
           <Col xs={4} md={4} lg={4}>
             <Slider
-              min={this.state.iRadius - 50}
-              max={this.state.iRadius + 100}
+              min={10}
+              max={this.state.MaxRadius}
               onChange={this.onChange}
               value={
                 typeof this.state.dRadius === "number" ? this.state.dRadius : 0
