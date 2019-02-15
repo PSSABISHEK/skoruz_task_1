@@ -120,11 +120,24 @@ class InputForBar extends Component {
                 <Col xs={12} md={2} lg={2}>
                   <ControlLabel style={xaxisStyle}>Title Name</ControlLabel>
                 </Col>
-                <Col xs={8} md={10} lg={2}>
+                <Col xs={8} md={10} lg={3}>
                   <FormControl
                     type="text"
                     name="chartname"
                     value={this.props.chartname}
+                    placeholder="Enter text"
+                    onChange={this.handleChange.bind(this)}
+                    style={xaxisStyle}
+                  />
+                </Col>
+                <Col xs={12} md={2} lg={2}>
+                  <ControlLabel style={xaxisStyle}>Title Color</ControlLabel>
+                </Col>
+                <Col xs={8} md={10} lg={2}>
+                  <FormControl
+                    type="text"
+                    name="titlefColor"
+                    value={this.props.titlefColor}
                     placeholder="Enter text"
                     onChange={this.handleChange.bind(this)}
                     style={xaxisStyle}
@@ -139,19 +152,6 @@ class InputForBar extends Component {
                     name="titlefSize"
                     value={this.props.titlefSize}
                     placeholder="Enter Number"
-                    onChange={this.handleChange.bind(this)}
-                    style={xaxisStyle}
-                  />
-                </Col>
-                <Col xs={12} md={2} lg={2}>
-                  <ControlLabel style={xaxisStyle}>Title Color</ControlLabel>
-                </Col>
-                <Col xs={8} md={10} lg={3}>
-                  <FormControl
-                    type="text"
-                    name="titlefColor"
-                    value={this.props.titlefColor}
-                    placeholder="Enter text"
                     onChange={this.handleChange.bind(this)}
                     style={xaxisStyle}
                   />
