@@ -37,7 +37,7 @@ class InputForBar extends Component {
       titlefSize: 10,
       labelfSize: 10,
       labelfColor: "Black",
-      selectedOption: { value: "pie", label: "Pie Graph" },
+      selectedOption: { value: "line", label: "Line Graph" },
       selectedTheme: { value: "seq", label: "Sequential" },
       data: []
     };

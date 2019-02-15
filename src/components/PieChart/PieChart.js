@@ -38,9 +38,9 @@ class PieChart extends Component {
     let yaxis = inputjson["y-axis"];
     let svgWidth = inputjson["width"];
     let svgHeight = inputjson["height"];
-    let fColor = inputjson["fColor"];
-    let fSize = inputjson["fSize"];
-    let fType = inputjson["fType"];
+    let fColor = inputjson["labelfColor"];
+    let fSize = inputjson["labelfSize"];
+    let colors;
     let margin = { top: 50, right: 50, bottom: 50, left: 50 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
@@ -52,6 +52,7 @@ class PieChart extends Component {
       });
     }
     let radius = this.state.dRadius;
+
     //CHART DIMENSION
     let svg = d3
       .select("#sg5")
@@ -63,21 +64,36 @@ class PieChart extends Component {
     //REMOVE PREVIOUS GRAPH
     d3.select("g").remove();
 
+    //SEQUENTIAL COLORS
+    if (chartColor === "seq") {
+      colors = d3
+        .scaleSequential()
+        .interpolator(d3.interpolateReds)
+        .domain([
+          0,
+          d3.max(data, function(d) {
+            return d.b;
+          })
+        ]);
+    } else {
+      colors = d3
+        .scaleSequential()
+        .interpolator(d3.interpolateRainbow)
+        .domain([
+          0,
+          d3.max(data, function(d) {
+            return d.b;
+          })
+        ]);
+    }
+
     let pievalues = d3
       .pie()
       .sort(null)
       .value(function(d) {
         return d.b;
       })(data);
-    let colors = d3
-      .scaleSequential()
-      .interpolator(d3.interpolateReds)
-      .domain([
-        0,
-        d3.max(data, function(d) {
-          return d.b;
-        })
-      ]);
+
     let segments = d3
       .arc()
       .innerRadius(0)

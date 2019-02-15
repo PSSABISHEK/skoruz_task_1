@@ -173,8 +173,6 @@ class ChartType extends Component {
             ]
           };
         } else {
-          console.log(this.state);
-
           inputjson = {
             "chart-type": this.state.selectedOption.value,
             chartColor: this.state.selectedTheme.value,
@@ -254,7 +252,7 @@ class ChartType extends Component {
     const chartnamestyle = {
       textAlign: "center",
       fontSize: this.state.titlefSize + "px",
-      color: this.state.titlefColor,
+      color: this.state.titlefColor
     };
 
     return (

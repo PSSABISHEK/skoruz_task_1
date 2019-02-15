@@ -31,9 +31,9 @@ class ScatterChart extends Component {
     let yaxis = inputjson["y-axis"];
     let svgWidth = inputjson["width"];
     let svgHeight = inputjson["height"];
-    let fColor = inputjson["fColor"];
-    let fSize = inputjson["fSize"];
-    let fType = inputjson["fType"];
+    let fColor = inputjson["labelfColor"];
+    let fSize = inputjson["labelfSize"];
+    let colors;
     let margin = { top: 50, right: 50, bottom: 50, left: 50 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
@@ -70,6 +70,29 @@ class ScatterChart extends Component {
       })
     ]);
 
+    //SEQUENTIAL COLORS
+    if (chartColor === "seq") {
+      colors = d3
+        .scaleSequential()
+        .interpolator(d3.interpolateReds)
+        .domain([
+          0,
+          d3.max(data, function(d) {
+            return d.b;
+          })
+        ]);
+    } else {
+      colors = d3
+        .scaleSequential()
+        .interpolator(d3.interpolateRainbow)
+        .domain([
+          0,
+          d3.max(data, function(d) {
+            return d.b;
+          })
+        ]);
+    }
+
     //APPENDS AXIS
     g.append("g")
       .attr("transform", `translate(0, ${height})`)
@@ -85,16 +108,14 @@ class ScatterChart extends Component {
       .attr("y", -(margin.left - 20))
       .attr("transform", "rotate(-90)")
       .attr("text-anchor", "middle")
-      .style("font-family", fType)
-      .style("font-size", fSize * 1.5)
+      .style("font-size", fSize)
       .style("fill", fColor)
       .text(yaxis);
     g.append("text")
       .attr("x", width / 2)
       .attr("y", height + 35)
       .attr("text-anchor", "middle")
-      .style("font-family", fType)
-      .style("font-size", fSize * 1.5)
+      .style("font-size", fSize)
       .style("fill", fColor)
       .text(xaxis);
 
@@ -115,7 +136,9 @@ class ScatterChart extends Component {
       .data(data)
       .enter()
       .append("circle")
-      .style("fill", chartColor)
+      .style("fill", function(d) {
+        return colors(d.b);
+      })
       .attr("cx", d => xScale(d.a))
       .attr("cy", d => yScale(d.b))
       .attr("r", this.state.graphSize);
@@ -131,7 +154,6 @@ class ScatterChart extends Component {
       .attr("y", function(d) {
         return yScale(d.b) - 15;
       })
-      .style("font-family", fType)
       .style("font-size", fSize)
       .style("fill", fColor)
       .text(function(d) {
@@ -144,8 +166,6 @@ class ScatterChart extends Component {
   }
 
   render() {
-    //let inputjson = this.props.inputjson;
-
     return (
       <div>
         <Grid>

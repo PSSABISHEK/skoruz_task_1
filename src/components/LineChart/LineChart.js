@@ -35,10 +35,11 @@ class LineChart extends Component {
     let svgHeight = inputjson["height"];
     let fColor = inputjson["labelfColor"];
     let fSize = inputjson["labelfSize"];
+    let colors;
     let margin = { top: 50, right: 50, bottom: 50, left: 50 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
-    
+
     //CHART DIMENSION
     let svg = d3
       .select("#sg1")
@@ -95,6 +96,28 @@ class LineChart extends Component {
       })
     ]);
 
+    //SEQUENTIAL COLORS
+    if (chartColor === "seq") {
+      colors = d3
+        .scaleSequential()
+        .interpolator(d3.interpolateBlues)
+        .domain([
+          0,
+          d3.max(data, function(d) {
+            return d.b;
+          })
+        ]);
+    } else {
+      colors = d3
+        .scaleSequential()
+        .interpolator(d3.interpolateRainbow)
+        .domain([
+          0,
+          d3.max(data, function(d) {
+            return d.b;
+          })
+        ]);
+    }
     //APPEND AXIS
     g.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -112,14 +135,14 @@ class LineChart extends Component {
       .attr("y", -(margin.left - 20))
       .attr("transform", "rotate(-90)")
       .attr("text-anchor", "middle")
-      .style("font-size", fSize * 1.5)
+      .style("font-size", fSize)
       .style("fill", fColor)
       .text(yaxis);
     g.append("text")
       .attr("x", width / 2)
       .attr("y", height + 35)
       .attr("text-anchor", "middle")
-      .style("font-size", fSize * 1.5)
+      .style("font-size", fSize)
       .style("fill", fColor)
       .text(xaxis);
 
@@ -173,7 +196,9 @@ class LineChart extends Component {
       .enter()
       .append("circle")
       .attr("r", (this.state.graphSize * 3.5) / 2)
-      .attr("fill", "steelblue")
+      .attr("fill", function(d) {
+        return colors(d.b);
+      })
       .attr("cx", function(d) {
         return x(d.a);
       })

@@ -8,38 +8,41 @@ class BarChart extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      graphSize: 3,
-      //graphSizeMax: 0,
+      maxBarWidth: 30,
+      dBarWidth: 1,
       ctr: 0
     };
   }
 
   onChange = value => {
     this.setState({
-      graphSize: value
+      dBarWidth: value
     });
   };
 
   componentDidMount() {
     this.drawBarChart();
-    /*  this.setState({
-      ctr: 1
-    }); */
   }
 
+  componentWillReceiveProps(nextporps) {
+    this.setState({
+      ctr: 0
+    });
+  }
+  
   //FUNCTION TO RENDER BAR CHART
   drawBarChart() {
     let inputjson = this.props.inputjson;
-    let lwidth = this.state.graphSize;
+    let barWidth = this.state.dBarWidth;
     let chartColor = inputjson["chartColor"];
     const data = inputjson["values"];
     let xaxis = inputjson["x-axis"];
     let yaxis = inputjson["y-axis"];
     let svgWidth = inputjson["width"];
     let svgHeight = inputjson["height"];
-    let fColor = inputjson["fColor"];
-    let fSize = inputjson["fSize"];
-    let fType = inputjson["fType"];
+    let fColor = inputjson["labelfColor"];
+    let fSize = inputjson["labelfSize"];
+    let colors;
     let margin = { top: 50, right: 50, bottom: 50, left: 50 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
@@ -77,11 +80,37 @@ class BarChart extends Component {
       })
     ]);
 
-    /*  if (this.state.ctr === 0) {
+    //SEQUENTIAL COLORS
+    if (chartColor === "seq") {
+      colors = d3
+        .scaleSequential()
+        .interpolator(d3.interpolateReds)
+        .domain([
+          0,
+          d3.max(data, function(d) {
+            return d.b;
+          })
+        ]);
+    } else {
+      colors = d3
+        .scaleSequential()
+        .interpolator(d3.interpolateRainbow)
+        .domain([
+          0,
+          d3.max(data, function(d) {
+            return d.b;
+          })
+        ]);
+    }
+
+    if (this.state.ctr === 0) {
       this.setState({
-        graphSizeMax: Math.round(xScale.bandwidth())
+        maxBarWidth: Math.round(xScale.bandwidth()),
+        dBarWidth: Math.round(xScale.bandwidth() / 2),
+        ctr: 1
       });
-    } */
+    }
+
     //APPEND AXIS
     g.append("g")
       .attr("transform", `translate(0, ${height})`)
@@ -108,26 +137,27 @@ class BarChart extends Component {
       .data(data)
       .enter()
       .append("rect")
-      .style("fill", chartColor)
+      //.style("fill", colors)
       .attr("x", d => xScale(d.a))
       .attr("y", d => yScale(d.b))
       .attr("height", d => height - yScale(d.b))
-      .attr("width", lwidth);
+      .attr("width", barWidth)
+      .attr("fill", function(d) {
+        return colors(d.b);
+      });
 
     //LABELS AT INTERSECTION
-    //if (this.state.graphSize !== 0) {
     g.selectAll(".text")
       .data(data)
       .enter()
       .append("text")
       .attr("x", function(d) {
-        return xScale(d.a) + (lwidth / 2 - 10);
+        return xScale(d.a) + (barWidth / 2 - 10);
       })
       .attr("y", function(d) {
         return yScale(d.b) - 10;
       })
-      .style("font-family", fType)
-      .style("font-size", fSize * 1.5)
+      .style("font-size", fSize)
       .style("fill", fColor)
       .text(function(d) {
         return d.b;
@@ -140,16 +170,14 @@ class BarChart extends Component {
       .attr("y", -(margin.left - 20))
       .attr("transform", "rotate(-90)")
       .attr("text-anchor", "middle")
-      .style("font-family", fType)
-      .style("font-size", fSize * 1.5)
+      .style("font-size", fSize)
       .style("fill", fColor)
       .text(yaxis);
     g.append("text")
       .attr("x", width / 2)
       .attr("y", height + 35)
       .attr("text-anchor", "middle")
-      .style("font-family", fType)
-      .style("font-size", fSize * 1.5)
+      .style("font-size", fSize)
       .style("fill", fColor)
       .text(xaxis);
   }
@@ -165,11 +193,11 @@ class BarChart extends Component {
           <Col xs={4} md={4} lg={4}>
             <Slider
               min={1}
-              max={100}
+              max={this.state.maxBarWidth}
               onChange={this.onChange}
               value={
-                typeof this.state.graphSize === "number"
-                  ? this.state.graphSize
+                typeof this.state.dBarWidth === "number"
+                  ? this.state.dBarWidth
                   : 0
               }
               step={10}

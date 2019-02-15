@@ -31,9 +31,9 @@ class GeoChart extends Component {
     let yaxis = inputjson["y-axis"];
     let svgWidth = inputjson["width"];
     let svgHeight = inputjson["height"];
-    let fColor = inputjson["fColor"];
-    let fSize = inputjson["fSize"];
-    let fType = inputjson["fType"];
+    let fColor = inputjson["labelfColor"];
+    let fSize = inputjson["labelfSize"];
+    let colors;
 
     var svg = d3
       .select("#sg4")
@@ -48,10 +48,31 @@ class GeoChart extends Component {
     var g = svg.append("g");
 
     const geoProjection = d3.geoMercator().center([0, 0]);
-    //.scale(100)
-    //.rotate([-180, 0]);
 
     var geoPath = d3.geoPath().projection(geoProjection);
+
+    //SEQUENTIAL COLORS
+    if (chartColor === "seq") {
+      colors = d3
+        .scaleSequential()
+        .interpolator(d3.interpolateReds)
+        .domain([
+          0,
+          d3.max(data, function(d) {
+            return d.y;
+          })
+        ]);
+    } else {
+      colors = d3
+        .scaleSequential()
+        .interpolator(d3.interpolateRainbow)
+        .domain([
+          0,
+          d3.max(data, function(d) {
+            return d.y;
+          })
+        ]);
+    }
 
     d3.json("https://unpkg.com/world-atlas@1/world/110m.json").then(topo => {
       const countries = feature(topo, topo.objects.countries);
@@ -70,7 +91,9 @@ class GeoChart extends Component {
           return "translate(" + geoProjection([d.x.lon, d.x.lat]) + ")";
         })
         .attr("r", this.state.graphSize)
-        .style("fill", chartColor);
+        .style("fill", function(d) {
+          return colors(d.y);
+        });
 
       g.selectAll("text")
         .data(data)
@@ -79,7 +102,6 @@ class GeoChart extends Component {
         .attr("transform", function(d) {
           return "translate(" + geoProjection([d.x.lon + 2, d.x.lat]) + ")";
         })
-        .style("font-family", fType)
         .style("font-size", fSize)
         .style("fill", fColor)
         //.style("font-weight", 'bold')
@@ -91,8 +113,7 @@ class GeoChart extends Component {
         .attr("x", svgWidth / 2)
         .attr("y", svgHeight - 10)
         .attr("text-anchor", "middle")
-        .style("font-family", fType)
-        .style("font-size", fSize * 1.5)
+        .style("font-size", fSize)
         .style("fill", fColor)
         .text(xaxis)
         .append("tspan")
@@ -109,8 +130,6 @@ class GeoChart extends Component {
   }
 
   render() {
-    //let inputjson = this.props.inputjson;
-
     return (
       <div>
         <Grid>
