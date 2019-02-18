@@ -41,9 +41,6 @@ class PieChart extends Component {
     let fColor = inputjson["labelfColor"];
     let fSize = inputjson["labelfSize"];
     let colors;
-    let margin = { top: 50, right: 50, bottom: 50, left: 50 };
-    let width = svgWidth - margin.left - margin.right;
-    let height = svgHeight - margin.top - margin.bottom;
     if (this.state.ctr === 0) {
       this.setState({
         MaxRadius: Math.min(svgHeight, svgWidth) / 2 - 50,
@@ -52,7 +49,6 @@ class PieChart extends Component {
       });
     }
     let radius = this.state.dRadius;
-    let formatTime = d3.timeFormat("%e %B");
 
     //CHART DIMENSION
     let svg = d3
@@ -104,7 +100,10 @@ class PieChart extends Component {
     //CONSTRUCT PIE CHART
     let g = svg
       .append("g")
-      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+      .attr(
+        "transform",
+        "translate(" + svgWidth / 2 + "," + svgHeight / 2 + ")"
+      )
       .selectAll("path")
       .data(pievalues);
 
@@ -121,7 +120,7 @@ class PieChart extends Component {
       });
 
     //LABELS FOR EACH PIE
-    /* let label = d3
+    let label = d3
       .select("g")
       .selectAll("text")
       .data(pievalues);
@@ -129,14 +128,16 @@ class PieChart extends Component {
       .enter()
       .append("text")
       .attr("transform", function(d) {
-        return "translate(" + segments.centroid(d) + ")";
+        let center = segments.centroid(d);
+        center[0] *= 2.2;
+        center[1] *= 2.2;
+        return "translate (" + center + ")";
       })
-      .style("font-family", fType)
       .style("font-size", fSize)
       .style("fill", fColor)
       .text(function(d) {
         return d.data.b;
-      }); */
+      });
   }
 
   componentDidUpdate() {

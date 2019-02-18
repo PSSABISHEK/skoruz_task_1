@@ -112,7 +112,7 @@ class GeoChart extends Component {
               return "translate(" + geoProjection([d.x.lon, d.x.lat + 5]) + ")";
             })
             .text(function() {
-              return [d.x.lon + " , " + d.x.lat];
+              return [d.x.country + " , " + d.y];
             });
         })
         .on("mouseout", function(d) {
@@ -120,6 +120,7 @@ class GeoChart extends Component {
           d3.select("#tool").remove();
         });
 
+      //TOOLTIP
       g.selectAll("text")
         .data(data)
         .enter()
@@ -134,6 +135,7 @@ class GeoChart extends Component {
           return d.x.country + "  " + d.y;
         });
 
+      //CHART LABEL
       g.append("text")
         .attr("x", svgWidth / 2)
         .attr("y", svgHeight - 10)
