@@ -142,16 +142,6 @@ class ChartType extends Component {
               },
               {
                 x: {
-                  code: "RIO",
-                  city: "RIO DE JANEIRO",
-                  country: "BRAZIL",
-                  lat: -22.9,
-                  lon: -43.24
-                },
-                y: 902
-              },
-              {
-                x: {
                   code: "YTO",
                   city: "TORONTO",
                   country: "CANADA",

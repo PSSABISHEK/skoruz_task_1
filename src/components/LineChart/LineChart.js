@@ -36,7 +36,9 @@ class LineChart extends Component {
     let fColor = inputjson["labelfColor"];
     let fSize = inputjson["labelfSize"];
     let colors;
-    let margin = { top: 50, right: 50, bottom: 50, left: 50 };
+    let radius = this.state.graphSize;
+    let formatTime = d3.timeFormat("%e %B");
+    let margin = { top: 50, right: 120, bottom: 50, left: 50 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
 
@@ -96,7 +98,7 @@ class LineChart extends Component {
       })
     ]);
 
-    //SEQUENTIAL COLORS
+    //SEQUENTIAL OR MULTI COLORS
     if (chartColor === "seq") {
       colors = d3
         .scaleSequential()
@@ -181,21 +183,18 @@ class LineChart extends Component {
       .attr("stroke", "steelblue")
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
-      .attr("stroke-width", this.state.graphSize)
+      .attr("stroke-width", radius)
       .attr("d", line);
-
-    let myTool = g
-      .selectAll("text")
-      .append("text")
-      .style("opacity", 0)
-      .style("display", "none");
 
     //DOTS AT INTERSECTION
     g.selectAll("circle")
       .data(data)
       .enter()
       .append("circle")
-      .attr("r", (this.state.graphSize * 3.5) / 2)
+      .attr("r", (radius * 3.5) / 2)
+      .attr("id", function(d) {
+        return "circ" + Math.round(d.b);
+      })
       .attr("fill", function(d) {
         return colors(d.b);
       })
@@ -205,8 +204,29 @@ class LineChart extends Component {
       .attr("cy", function(d) {
         return y(d.b);
       })
-      .on("mouseover", function(d) {})
-      .on("mouseout", function(d) {});
+      //DEFINING TOOLTIP
+      .on("mouseover", function(d) {
+        g.select("#circ" + Math.round(d.b)).attr("r", radius * 2);
+        g.append("text")
+          .transition()
+          .duration(10)
+          .attr("id", "tool")
+          .attr("class", tooltipstyle)
+          .attr("font-size", fSize)
+          .attr("x", function() {
+            return x(d.a) + 10;
+          })
+          .attr("y", function() {
+            return y(d.b);
+          })
+          .text(function() {
+            return [formatTime(d.a), d.b];
+          });
+      })
+      .on("mouseout", function(d) {
+        g.select("#circ" + Math.round(d.b)).attr("r", (radius * 3.5) / 2);
+        d3.select("#tool").remove();
+      });
 
     //LABELS AT INTERSECTION
     g.selectAll(".text")
@@ -230,6 +250,7 @@ class LineChart extends Component {
           }
         }
       })
+      .style("cursor", "default")
       .style("font-size", fSize)
       .style("fill", fColor)
       .text(function(d) {
@@ -281,7 +302,7 @@ class LineChart extends Component {
 
 export default LineChart;
 
-let tooltip = {
+const tooltipstyle = {
   position: "absolute",
   "text-align": "center",
   width: "60px",

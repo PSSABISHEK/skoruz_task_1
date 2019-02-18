@@ -34,6 +34,7 @@ class GeoChart extends Component {
     let fColor = inputjson["labelfColor"];
     let fSize = inputjson["labelfSize"];
     let colors;
+    let radius = this.state.graphSize;
 
     var svg = d3
       .select("#sg4")
@@ -83,16 +84,40 @@ class GeoChart extends Component {
         .attr("fill", "#ccc")
         .attr("d", geoPath);
 
+      //CREATE PLOT AT THE COORDINATE
       g.selectAll("circle")
         .data(data)
         .enter()
         .append("circle")
+        .attr("id", function(d) {
+          return "circ" + Math.round(d.y);
+        })
         .attr("transform", function(d) {
           return "translate(" + geoProjection([d.x.lon, d.x.lat]) + ")";
         })
-        .attr("r", this.state.graphSize)
+        .attr("r", radius)
         .style("fill", function(d) {
           return colors(d.y);
+        })
+        .on("mouseover", function(d) {
+          g.select("#circ" + Math.round(d.y)).attr("r", radius * 2);
+          g.append("text")
+            .transition()
+            .duration(10)
+            .attr("id", "tool")
+            //.attr("class", tooltipstyle)
+            .attr("font-size", fSize)
+            .style("cursor", "default")
+            .attr("transform", function() {
+              return "translate(" + geoProjection([d.x.lon, d.x.lat + 5]) + ")";
+            })
+            .text(function() {
+              return [d.x.lon + " , " + d.x.lat];
+            });
+        })
+        .on("mouseout", function(d) {
+          g.select("#circ" + Math.round(d.y)).attr("r", radius);
+          d3.select("#tool").remove();
         });
 
       g.selectAll("text")
@@ -104,7 +129,7 @@ class GeoChart extends Component {
         })
         .style("font-size", fSize)
         .style("fill", fColor)
-        //.style("font-weight", 'bold')
+        .style("cursor", "default")
         .text(function(d) {
           return d.x.country + "  " + d.y;
         });

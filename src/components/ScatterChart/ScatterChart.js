@@ -34,7 +34,9 @@ class ScatterChart extends Component {
     let fColor = inputjson["labelfColor"];
     let fSize = inputjson["labelfSize"];
     let colors;
-    let margin = { top: 50, right: 50, bottom: 50, left: 50 };
+    let formatTime = d3.timeFormat("%e %B");
+    let radius = this.state.graphSize;
+    let margin = { top: 50, right: 120, bottom: 50, left: 50 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
 
@@ -136,12 +138,37 @@ class ScatterChart extends Component {
       .data(data)
       .enter()
       .append("circle")
+      .attr("id", function(d) {
+        return "circ" + Math.round(d.b);
+      })
       .style("fill", function(d) {
         return colors(d.b);
       })
       .attr("cx", d => xScale(d.a))
       .attr("cy", d => yScale(d.b))
-      .attr("r", this.state.graphSize);
+      .attr("r", radius)
+      .on("mouseover", function(d) {
+        g.select("#circ" + Math.round(d.b)).attr("r", radius * 2);
+        g.append("text")
+          .transition()
+          .duration(10)
+          .attr("id", "tool")
+          //.attr("class", tooltipstyle)
+          .attr("font-size", fSize)
+          .attr("x", function() {
+            return xScale(d.a) + 10;
+          })
+          .attr("y", function() {
+            return yScale(d.b);
+          })
+          .text(function() {
+            return [formatTime(d.a), d.b];
+          });
+      })
+      .on("mouseout", function(d) {
+        g.select("#circ" + Math.round(d.b)).attr("r", radius);
+        d3.select("#tool").remove();
+      });
 
     //LABELS AT INTERSECTION
     g.selectAll(".text")

@@ -29,7 +29,7 @@ class BarChart extends Component {
       ctr: 0
     });
   }
-  
+
   //FUNCTION TO RENDER BAR CHART
   drawBarChart() {
     let inputjson = this.props.inputjson;
@@ -46,6 +46,7 @@ class BarChart extends Component {
     let margin = { top: 50, right: 50, bottom: 50, left: 50 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
+    let formatTime = d3.timeFormat("%e %B");
 
     //CHART DIMENSION
     let svg = d3
@@ -137,13 +138,40 @@ class BarChart extends Component {
       .data(data)
       .enter()
       .append("rect")
-      //.style("fill", colors)
+      .attr("id", function(d) {
+        return "bar" + d.b;
+      })
       .attr("x", d => xScale(d.a))
       .attr("y", d => yScale(d.b))
       .attr("height", d => height - yScale(d.b))
       .attr("width", barWidth)
       .attr("fill", function(d) {
         return colors(d.b);
+      })
+      .on("mouseover", function(d) {
+        g.select("#bar" + d.b)
+          .attr("height", d => height + 2 - yScale(d.b))
+          .attr("width", barWidth + 2);
+        g.append("text")
+          .transition()
+          .duration(10)
+          .attr("id", "tool")
+          .attr("font-size", fSize)
+          .attr("x", function() {
+            return xScale(d.a) + 10;
+          })
+          .attr("y", function() {
+            return yScale(d.b) - 2;
+          })
+          .text(function() {
+            return [formatTime(d.a), d.b];
+          });
+      })
+      .on("mouseout", function(d) {
+        g.select("#bar" + d.b)
+          .attr("height", d => height - yScale(d.b))
+          .attr("width", barWidth);
+        d3.select("#tool").remove();
       });
 
     //LABELS AT INTERSECTION
@@ -155,7 +183,7 @@ class BarChart extends Component {
         return xScale(d.a) + (barWidth / 2 - 10);
       })
       .attr("y", function(d) {
-        return yScale(d.b) - 10;
+        return yScale(d.b) - 15;
       })
       .style("font-size", fSize)
       .style("fill", fColor)

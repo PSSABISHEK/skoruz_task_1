@@ -52,6 +52,7 @@ class PieChart extends Component {
       });
     }
     let radius = this.state.dRadius;
+    let formatTime = d3.timeFormat("%e %B");
 
     //CHART DIMENSION
     let svg = d3
@@ -106,6 +107,7 @@ class PieChart extends Component {
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
       .selectAll("path")
       .data(pievalues);
+
     g.enter()
       .append("path")
       .attr("d", segments);
